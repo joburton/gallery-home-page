@@ -1,0 +1,56 @@
+{# ---------------------------------------------------------------------------
+   HARNESS PAGE — THROWAWAY. Never delivered to Foster.
+
+   Its only job is to display the row for prototyping: no navigation, no footer,
+   no sibling rows. Nothing here may style or position the row — if the gallery
+   only looks right because of something in this file, that is a bug in the row.
+
+   With withSiblings = true it adds deliberately plain placeholder blocks above
+   and below the row. Nothing about the gallery's appearance or behaviour should
+   change when they appear — that is the acceptance check for row independence.
+--------------------------------------------------------------------------- #}
+{# The page-level concerns below (main landmark, meta description, title) belong to
+   the PAGE, not the row. Craft's real homepage template provides them. They live here
+   so the harness is a valid page to audit against — a row that added its own <main>
+   would be claiming a landmark it does not own. #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SABIN Gallery Row — local harness</title>
+<meta name="description" content="Local prototyping harness for the SABIN gallery predefined row. Not a delivered page.">
+{# Deliberately NO <meta name="robots" content="noindex">. It would be correct for a
+   real deployment, but the harness only ever runs on localhost (robots.txt disallows
+   everything anyway), and a noindex tag makes an SEO audit score the harness's
+   crawlability instead of the row's — which is the thing being measured. #}
+<link rel="stylesheet" href="/dist/gallery.css">
+</head>
+<body>
+<main>
+
+{% if withSiblings %}
+ <div style="padding:3rem 1.5rem;background:#111;color:#fff;font:500 1rem/1.4 system-ui,sans-serif">
+  <p style="margin:0">HARNESS PLACEHOLDER — row above the gallery.</p>
+  <p style="margin:.5rem 0 0;opacity:.7">Deliberately unstyled. The gallery below must render identically with or without this block.</p>
+ </div>
+{% endif %}
+
+{% include '_rows/gallery-row.twig' with { row: row } only %}
+
+{% if withSiblings %}
+ <div style="padding:3rem 1.5rem;background:#111;color:#fff;font:500 1rem/1.4 system-ui,sans-serif">
+  <p style="margin:0">HARNESS PLACEHOLDER — row below the gallery.</p>
+  <p style="margin:.5rem 0 0;opacity:.7">The gallery canvas simply ends and this follows. No footer behaviour belongs to the gallery.</p>
+ </div>
+{% endif %}
+
+</main>
+
+{# Loaded as a module at the end of the body, and deliberately NOT deferred behind
+   anything: the row is already complete and usable before this runs. In production
+   Foster includes src/js/gallery.js in the site bundle; the row's data attributes are
+   the entire interface between the two. #}
+<script type="module" src="/src/js/gallery.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{# ---------------------------------------------------------------------------
+   BUILD ICON — the corner link through to a product's composition in Build.
+
+   Params:
+     tile   the tile this icon belongs to (must have a live buildLink)
+     row    the row, for row.buildIcon
+     label  accessible label, distinct from the primary link's
+
+   A SIBLING anchor to the primary tile link, never nested inside it: nested <a>
+   elements are invalid HTML and browsers restructure them unpredictably. Stacking
+   is handled in CSS (.gallery-tile__build sits above .gallery-tile__link), so a
+   click on the icon reaches Build and a click anywhere else reaches the product.
+
+   Default is an inline SVG rather than a bitmap, so it inherits colour from the
+   theme and stays crisp. row.buildIcon replaces it globally when set in Craft.
+
+   The glyph is a sliders mark — the horizontal-lines-with-dots form familiar from
+   filter and settings UI — which reads as "adjust this" without the commerce
+   connotation of a cart.
+--------------------------------------------------------------------------- #}
+<a
+ class="gallery-tile__build"
+ href="{{ tile.buildLink.url }}"
+ rel="noopener noreferrer"
+ aria-label="{{ label }}"
+>
+ {% if row.buildIcon is not null %}
+  <img src="{{ row.buildIcon.url }}" alt="" width="20" height="20">
+ {% else %}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+   stroke-linecap="round" aria-hidden="true" focusable="false">
+   <line x1="3" y1="7" x2="21" y2="7" />
+   <line x1="3" y1="12" x2="21" y2="12" />
+   <line x1="3" y1="17" x2="21" y2="17" />
+   <circle cx="9" cy="7" r="2.25" fill="currentColor" stroke="none" />
+   <circle cx="15" cy="12" r="2.25" fill="currentColor" stroke="none" />
+   <circle cx="7.5" cy="17" r="2.25" fill="currentColor" stroke="none" />
+  </svg>
+ {% endif %}
+</a>

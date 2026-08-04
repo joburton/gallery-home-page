@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+#
+# preview — THE documented command for previewing the gallery locally.
+#
+# Builds the stylesheet, prepares any generated media, and serves the harness page
+# so the row fills the browser: scrollable, layout-mode switchable via the fixture,
+# tiles clickable. No navigation, no footer, no sibling rows.
+#
+# Usage:
+#   bin/preview                  serve at http://localhost:8080
+#   bin/preview --port 3000      serve on a different port
+#   bin/preview --with-siblings  add placeholder blocks above and below the row,
+#                                proving the row depends on nothing around it
+#   bin/preview --build-only     build CSS and exit without serving
+#
+# Requires: php, tailwindcss (see README for one-line setup).
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+PORT=8080
+BUILD_ONLY=0
+export GALLERY_WITH_SIBLINGS=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --port) PORT="$2"; shift 2 ;;
+    --with-siblings) export GALLERY_WITH_SIBLINGS=1; shift ;;
+    --build-only) BUILD_ONLY=1; shift ;;
+    -h|--help) sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+
+# --- dependencies -----------------------------------------------------------
+
+if ! command -v php >/dev/null 2>&1; then
+  echo "error: php not found. Install with: brew install php" >&2
+  exit 1
+fi
+
+# The standalone binary is ~80MB, so it is deliberately kept OUT of this project
+# directory: the project lives in a cloud-synced folder and a binary that size would
+# sync-thrash on every checkout. It is resolved from a few known locations rather
+# than requiring PATH surgery, so a clean checkout works either way.
+TAILWIND=""
+for candidate in \
+  "${TAILWIND_BIN:-}" \
+  "$(command -v tailwindcss 2>/dev/null || true)" \
+  "$HOME/.local/bin/tailwindcss" \
+  "/opt/homebrew/bin/tailwindcss" \
+  "/usr/local/bin/tailwindcss"
+do
+  if [[ -n "$candidate" && -x "$candidate" ]]; then
+    TAILWIND="$candidate"
+    break
+  fi
+done
+
+if [[ -z "$TAILWIND" ]]; then
+  cat >&2 <<'MSG'
+error: tailwindcss standalone CLI not found.
+
+  Install it (no Node toolchain needed):
+
+    mkdir -p ~/.local/bin
+    curl -sL -o ~/.local/bin/tailwindcss \
+      https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64
+    chmod +x ~/.local/bin/tailwindcss
+
+  Or point TAILWIND_BIN at an existing binary:
+
+    TAILWIND_BIN=/path/to/tailwindcss bin/preview
+MSG
+  exit 1
+fi
+
+if [[ ! -f vendor/autoload.php ]]; then
+  echo "installing php dependencies..."
+  composer install --no-interaction --quiet
+fi
+
+# --- generated media --------------------------------------------------------
+# dist/ is disposable, so a clean checkout regenerates it rather than carrying it.
+
+if [[ ! -f dist/media/factory-cutting-machine-loop.mp4 ]]; then
+  echo "preparing media..."
+  bin/prepare-media >/dev/null
+fi
+
+# --- stylesheet -------------------------------------------------------------
+
+mkdir -p dist
+echo "building stylesheet..."
+"$TAILWIND" -i src/css/gallery.css -o dist/gallery.css --minify 2>&1 | grep -v '^$' || true
+
+css_bytes=$(stat -f%z dist/gallery.css)
+printf '  dist/gallery.css  %s bytes\n' "$(printf "%'d" "$css_bytes")"
+
+if [[ $BUILD_ONLY -eq 1 ]]; then
+  exit 0
+fi
+
+# --- serve ------------------------------------------------------------------
+
+echo
+echo "gallery row → http://localhost:${PORT}"
+if [[ "$GALLERY_WITH_SIBLINGS" == "1" ]]; then
+  echo "  (with placeholder rows above and below — the gallery must look identical)"
+fi
+echo "press ctrl-c to stop"
+echo
+
+exec php -S "localhost:${PORT}" -t . harness/router.php

@@ -1,0 +1,97 @@
+{# ---------------------------------------------------------------------------
+   MEDIA TILE — one image or motion tile.
+
+   Params:
+     tile   image or motion tile
+     row    the row, for theme and buildIcon
+     eager  true for the first screen or two, so above-the-fold media is not lazy
+     first  true for the single most important tile, which gets fetchpriority
+
+   Image and motion tiles share this include because they share a shape and route
+   identically — one media field for both, so switching a tile's type in Craft is a
+   data change and not a schema change.
+--------------------------------------------------------------------------- #}
+
+{# A motion tile's visible still is its poster; an image tile's is its media. Only
+   the still is ever transformed — a video never goes through ImagerX. #}
+{% set still = tile.type == 'motion' ? tile.poster : tile.media %}
+
+{# Derivative widths follow the tile's own column span rather than a fixed ladder,
+   so a 2x2 asks for twice the pixels of a 1x1 and a future 2x3 needs no code
+   change. A 2in cell is 192 CSS px; the 1x/2x/3x rungs cover the density range
+   without a tile ever downloading a full-resolution render. Plain Twig arithmetic,
+   so it behaves identically under Craft. #}
+{% set cols = tile.size|split('x')|first %}
+{% set cell = 192 * cols %}
+
+{% set transformed = craft.imagerx.transformImage(still, [
+  { width: cell },
+  { width: cell * 2 },
+  { width: cell * 3 }
+], {
+  mode: 'crop',
+  ratio: 1/1
+}) %}
+
+{# Both links describe the same subject, so a short subject name keeps the two
+   labels distinguishable without reading a whole sentence of alt text. Falls back
+   to alt so a label is never empty. #}
+{% set subject = tile.subject|default(tile.alt) %}
+
+{% if tile.type == 'motion' %}
+ {# Muted, looping, inline, poster-bearing. preload="none" keeps a deep canvas of
+    motion tiles from costing anything until they are actually played (Sprint 2).
+    Silent by encoding as well as by attribute — see bin/prepare-media. #}
+ <video
+  class="gallery-tile__media"
+  poster="{{ transformed[1].url }}"
+  width="{{ transformed[1].width }}"
+  height="{{ transformed[1].height }}"
+  muted loop playsinline preload="none"
+  data-playback="{{ tile.playback }}"
+  aria-label="{{ tile.alt }}"
+ >
+  <source src="{{ tile.media.url }}" type="{{ tile.media.mimeType }}">
+ </video>
+{% else %}
+ {# Below the two-column floor a tile is about half the viewport; above it the tile
+    settles near its target size. Without sizes the browser assumes 100vw and pulls
+    the largest candidate for every tile. #}
+ <img
+  class="gallery-tile__media"
+  src="{{ transformed[1].url }}"
+  srcset="{{ craft.imagerx.srcset(transformed) }}"
+  sizes="(max-width: 480px) {{ 50 * cols }}vw, {{ cell }}px"
+  width="{{ transformed[1].width }}"
+  height="{{ transformed[1].height }}"
+  alt="{{ tile.alt }}"
+  loading="{{ eager ? 'eager' : 'lazy' }}"
+  decoding="async"
+  {%- if first %} fetchpriority="high"{% endif %}
+ >
+{% endif %}
+
+{# Primary whole-tile link — an anchor stretched with absolute inset-0, following the
+   pattern in Foster's existing predefined rows.
+
+   A destination marked not-live renders nothing at all here: no anchor, no dead
+   href. It must not be announced to assistive technology as a link and must not sit
+   in the tab order, because it does nothing on click. The media and its alt text
+   still render, so the tile remains real content for crawlers. #}
+{% if tile.destination.live %}
+ <a class="gallery-tile__link" href="{{ tile.destination.url }}"
+  {%- if tile.destination.type == 'external' %} rel="noopener noreferrer"{% endif %}>
+  <span class="gallery-sr-only">View {{ subject }}</span>
+ </a>
+{% endif %}
+
+{# Second, independent link — a sibling of the primary, never nested. Renders only
+   when the tile actually has a live Build link: an icon that goes nowhere advertises
+   a feature that isn't there and creates a dead interactive element. #}
+{% if tile.buildLink is not null and tile.buildLink.live %}
+ {% include '_components/includes/gallery-build-icon.twig' with {
+   tile: tile,
+   row: row,
+   label: 'Configure ' ~ subject ~ ' in Build'
+ } only %}
+{% endif %}

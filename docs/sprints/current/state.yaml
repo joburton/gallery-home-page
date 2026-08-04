@@ -1,0 +1,64 @@
+sprint: gallery-row-static
+started: 2026-08-04
+current_phase: complete
+architecture: docs/architecture/pending/gallery-row.md
+capabilities:
+  - tile-grid-layout-engine: [grid-contract, two-column-floor, layout-modes, dense-packing]
+  - tile-rendering-routing: [three-types, dual-anchors, build-icon, live-false, brand-tokens]
+  - row-data-layer: [fixture, validation, craft-shim, craft-native-idioms]
+  - preview-harness: [preview-command, media-prep, derivatives, budget-report]
+phases:
+  1: {status: complete, name: craft-shim-fixture-loader}
+  2: {status: complete, name: media-pipeline}
+  3: {status: complete, name: grid-engine-brand-tokens}
+  4: {status: complete, name: tile-rendering-routing}
+  5: {status: complete, name: full-fixture-verification}
+
+verification:
+  structural_assertions: 32 passed, 0 failed
+  validation_rules: 14 exercised, all fire before render
+  lighthouse_mobile:
+    performance: 98      # target >= 85
+    accessibility: 100   # target >= 95
+    seo: 100             # target 100
+    best_practices: 100
+    lcp_seconds: 2.3     # target < 2.5
+    cls: 0
+    total_blocking_time_ms: 0
+  initial_viewport_budget:
+    mobile_375x667: {kb: 267.6, requests: 17, media_loaded: "15 of 31"}
+    desktop_1440x900: {kb: 306.4, requests: 33, media_loaded: "31 of 31"}
+  grid_measured_in_chrome:
+    two_column_floor_at_320px: "holds at gutter 0,1,4,8,16,32,64"
+    column_reflow: "2,2,2,3,3,5,7,9 across 320-1920px, no breakpoint jump"
+    horizontal_overflow: none
+    tiles_square: "1x1 and 2x2 square at every width tested"
+    two_by_two_geometry: "exactly 2 columns + 1 gutter"
+  transcode:
+    source: "1920x1080, 2.4s, 20Mbps, 6,041,498 bytes, no audio stream"
+    output: "768x768 muted, 87,916 bytes (1.5% of source)"
+
+bugs_found_and_fixed:
+  - "grid-column shorthand resolved to grid-column-START: span 2, which the welcome
+     tile's pinning rule then overrode — silently collapsing a 2x2 to one column.
+     Fixed by declaring spans with the -end longhand."
+  - "Narrow-width text-tile rule lost on specificity to the tile-size rule, so the
+     tile went full-width but stayed square. Fixed by raising selector specificity."
+  - "fetchpriority was keyed to loop.first, which is the welcome TEXT tile — so no
+     image was ever prioritised. Now keyed to the first tile that has media."
+  - "Primary CTA was white on Sabin orange: 3.34:1, failing WCAG AA. Now dark-gray at
+     the large-text size floor, 3.96:1."
+  - "STDERR resolved into the Sabin\\Harness namespace, fataling the dev router. The
+     fatal returned HTTP 200, so a status-code check missed it entirely."
+
+deferred_to_sprint_2:
+  - canvas-padding-repeats
+  - scroll-inertia
+  - motion-playback-concurrency
+  - windowing-recycling   # measured as likely REQUIRED, not optional: Chrome loaded
+                          # all 31 derivatives at 1440px despite loading="lazy"
+
+open_questions:
+  - webfont-licences-unconfirmed-no-files-present
+  - foster-type-scale-palette-token-names-tailwind-version
+  - real-product-swatch-about-urls

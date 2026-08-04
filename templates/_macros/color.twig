@@ -1,0 +1,23 @@
+{# ---------------------------------------------------------------------------
+   COLOUR MACRO — LOCAL STAND-IN, REPLACED AT HANDOFF
+
+   Foster's site already has this macro; the gallery row imports it exactly as
+   their existing rows do (see "predefined row reference.twig"). This file exists
+   only so the row renders in the local harness. At handoff it is DELETED and
+   Foster's real _macros/color.twig takes over.
+
+   That is why the row template must never hardcode colour classes: the whole
+   point of going through the macro is that their implementation wins in
+   production without the row changing.
+
+   The class names below use the brand tokens declared in src/css/gallery.css
+   (@theme), so light/dark themes resolve to real palette values locally.
+--------------------------------------------------------------------------- #}
+
+{% macro bgColor(theme) %}{{ theme == 'dark' ? 'bg-sabin-dark-gray' : 'bg-sabin-off-white' }}{% endmacro %}
+
+{% macro textColor(theme) %}{{ theme == 'dark' ? 'text-sabin-off-white' : 'text-sabin-dark-gray' }}{% endmacro %}
+
+{# The colour a tile sits on, so media carrying transparency never shows through
+   to whatever is behind the row. #}
+{% macro tileBgColor(theme) %}{{ theme == 'dark' ? 'bg-[#3a3a3a]' : 'bg-sabin-light-gray' }}{% endmacro %}

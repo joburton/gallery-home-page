@@ -1,0 +1,80 @@
+{# ---------------------------------------------------------------------------
+   GALLERY ROW — THE DELIVERABLE
+
+   A predefined row: a self-contained, reusable content block Craft can place and
+   reorder among other rows. Under a single root element, it reads everything off
+   `row` and assumes nothing about what sits above or below it — no page-level CSS,
+   no reset, no assumption of owning the viewport, no reference to navigation,
+   footer or sibling rows.
+
+   Authored against Craft's own API (craft.imagerx, asset.alt, the shared colour
+   macro) so Phase 3 integration is a data-source swap, not a rewrite. Locally those
+   resolve through harness/craft-shim; in production they resolve through Craft.
+
+   EVERY unique tile is rendered here exactly once, server-side. That is what
+   crawlers and answer engines depend on. The repeats that pad the canvas to its
+   minimum depth are generated client-side and are inert — they carry no
+   data-tile-id, are aria-hidden, and sit outside the tab order. Repeating thirty
+   tiles across fifteen screens of markup would mean the same alt text and the same
+   media duplicated many times over in the served HTML, which is both a
+   duplicate-content problem and a large avoidable DOM.
+--------------------------------------------------------------------------- #}
+
+{% import '_macros/color.twig' as color %}
+
+{# How many tiles load eagerly. Media below the initial viewport must be lazy, with
+   only the first screen or two eager — at a 2in cell that is a handful of tiles on a
+   phone, which is what governs LCP. #}
+{% set eagerCount = 2 %}
+
+{# The LCP candidate is the first tile that actually has media. Keying fetchpriority
+   to loop.first instead would put it on the welcome text tile, which has no image at
+   all — so nothing would be prioritised and the largest tile would queue behind its
+   siblings. #}
+{% set mediaTiles = row.tiles|filter(t => t.type != 'text') %}
+{% set firstMediaId = mediaTiles is not empty ? (mediaTiles|first).id : null %}
+
+<section
+ class="gallery-row {{ color.bgColor(row.theme) }} {{ color.textColor(row.theme) }}"
+ data-gallery-row
+ data-theme="{{ row.theme }}"
+ data-layout-mode="{{ row.layoutMode }}"
+ data-inertia-enabled="{{ row.scrollInertia.enabled ? 'true' : 'false' }}"
+ data-inertia-speed="{{ row.scrollInertia.speed }}"
+ data-inertia-feel="{{ row.scrollInertia.feel }}"
+ data-max-concurrent-motion="{{ row.maxConcurrentMotion }}"
+ style="--gallery-gap: {{ row.tileGap }}px; --gallery-card-target: {{ row.cardTarget }}; --gallery-min-depth: {{ row.minCanvasDepth }};"
+ aria-label="Sabin gallery"
+>
+ <ul class="gallery-grid" data-gallery-grid>
+  {% for tile in row.tiles %}
+   {# Only this canonical instance carries the id, so the document never contains a
+      duplicate. Client-generated padding repeats must not carry it. #}
+   <li
+    class="gallery-tile{{ tile.type == 'text' ? ' gallery-tile--text' : '' }}"
+    data-tile-id="{{ tile.id }}"
+    data-tile-type="{{ tile.type }}"
+    data-tile-size="{{ tile.size }}"
+    data-designation="{{ tile.designation }}"
+    {%- if tile.type == 'text' %} data-background="{{ tile.text.background }}"{% endif %}
+    {#- The welcome tile is pinned to the first cell explicitly rather than left to
+        the packing algorithm, which is otherwise free to move it. #}
+    {%- if loop.first %} data-pinned="first"{% endif %}
+   >
+    {% if tile.type == 'text' %}
+     {% include '_components/includes/gallery-tile-text.twig' with {
+       tile: tile,
+       row: row
+     } only %}
+    {% else %}
+     {% include '_components/includes/gallery-tile-media.twig' with {
+       tile: tile,
+       row: row,
+       eager: loop.index0 < eagerCount,
+       first: tile.id == firstMediaId
+     } only %}
+    {% endif %}
+   </li>
+  {% endfor %}
+ </ul>
+</section>

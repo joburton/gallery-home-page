@@ -1,0 +1,522 @@
+/* ===========================================================================
+   SABIN GALLERY ROW — stylesheet (DELIVERED)
+   ===========================================================================
+
+   Scoped entirely under .gallery-row. There is no page-level or reset CSS here:
+   the row is a predefined row that Craft drops among other rows, so it must not
+   style anything it does not own, and must not depend on anything around it.
+
+   Brand tokens are declared once in @theme and referenced by name everywhere.
+   The type-scale class names (copy-*) follow the convention visible in Foster's
+   predefined row reference; the exact scale is theirs, so these live in one place
+   to keep the eventual reconciliation to a single file.
+   =========================================================================== */
+
+@import "tailwindcss";
+
+@source "../../templates/**/*.twig";
+@source "../../harness/**/*.twig";
+
+@theme {
+  /* Core palette — the only colours a fixture may name. */
+  --color-sabin-orange: #f15c24;
+  --color-sabin-yellow: #ffc15e;
+  --color-sabin-dark-gray: #303030;
+  --color-sabin-white: #ffffff;
+  --color-sabin-light-gray: #e5e4dc;
+  --color-sabin-off-white: #f4f4f4;
+
+  /* Brand faces. Neue Montreal and Messina Modern are NOT present in this project
+     and their licences are unconfirmed — see README. The fallbacks below are the
+     spec's stated ones, so the row renders honestly rather than silently
+     substituting something that looks close. Dropping licensed files in and
+     extending these two stacks is the only change needed. */
+  --font-sabin-primary: "Neue Montreal", Helvetica, Arial, sans-serif;
+  --font-sabin-secondary: "Messina Modern", "Times New Roman", Times, serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Type scale — named levels only. A fixture names a level; it never sets a
+   font, size or weight, which is what keeps text tiles on-brand.
+--------------------------------------------------------------------------- */
+@layer components {
+  .gallery-row .copy-100 {
+    font-family: var(--font-sabin-primary);
+    font-weight: 300;
+    font-size: clamp(0.8125rem, 0.78rem + 0.15vw, 0.875rem);
+    line-height: 1.5;
+  }
+
+  .gallery-row .copy-250 {
+    font-family: var(--font-sabin-primary);
+    font-weight: 300;
+    font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    line-height: 1.45;
+  }
+
+  .gallery-row .copy-400 {
+    font-family: var(--font-sabin-primary);
+    font-weight: 500;
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+
+  .gallery-row .copy-600 {
+    font-family: var(--font-sabin-primary);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+  }
+}
+
+/* ===========================================================================
+   THE GRID
+   ===========================================================================
+
+   One engine. Both layout modes are this same grid; they differ only in whether
+   row spans vary. --gallery-gap and --gallery-card-target are written onto the
+   row root from row.tileGap and row.cardTarget, so nothing here is hardcoded.
+   =========================================================================== */
+
+.gallery-row {
+  /* container-type lets the text tile's full-width threshold be measured against
+     the row's own width rather than the viewport's. A viewport media query would
+     make the row's appearance depend on the page around it. */
+  container-type: inline-size;
+  container-name: gallery;
+}
+
+.gallery-grid {
+  display: grid;
+
+  /* THE COUPLED EXPRESSION — the gutter appears twice here and must come from one
+     property. minmax(min(target, (100% - gap)/2), 1fr) yields a floor of exactly
+     two columns at any width: once a column would have to be narrower than half
+     the container minus one gutter, auto-fill can no longer fit a third.
+     If gap and this expression are ever allowed to diverge, changing the gutter
+     silently collapses the grid to one column with no obvious cause. */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--gallery-card-target), calc((100% - var(--gallery-gap)) / 2)), 1fr)
+  );
+  gap: var(--gallery-gap);
+
+  /* Dense packing: a later small tile backfills the hole a large one leaves, so no
+     empty cells sit in the layout. The cost is that strict source order is not
+     guaranteed — accepted, with the welcome tile pinned below. */
+  grid-auto-flow: dense;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Tiles
+
+   Spans are read from data-tile-size via attribute selectors rather than being
+   generated per tile, and the aspect ratio comes from the same source. This
+   milestone uses 1x1 and 2x2; the selectors below cover the sizes in use, and a
+   new size is a fixture change plus one rule here.
+--------------------------------------------------------------------------- */
+.gallery-tile {
+  position: relative;
+  overflow: hidden;
+
+  /* Square by default. For an NxM tile the width is N cells plus N-1 gutters and
+     the height M cells plus M-1 gutters, so aspect-ratio N/M is exact whenever
+     N equals M — true for every size this milestone uses, at any gutter value. */
+  aspect-ratio: 1 / 1;
+
+  /* Media may carry transparency, so a tile never assumes its image is opaque. */
+  background-color: var(--color-sabin-light-gray);
+}
+
+.gallery-row[data-theme="dark"] .gallery-tile {
+  background-color: #3a3a3a;
+}
+
+/* Spans are declared with the -end longhand, NOT `grid-column: span 2`.
+   The shorthand resolves to grid-column-START: span 2, which the pinning rule below
+   then overrides with an explicit start line — silently collapsing the tile to a
+   single column. Setting the end instead lets a span and a start position coexist. */
+.gallery-tile[data-tile-size="2x2"] {
+  grid-column-end: span 2;
+  grid-row-end: span 2;
+  aspect-ratio: 1 / 1;
+}
+
+/* The welcome tile is pinned to the first cell explicitly. Dense packing would
+   otherwise be free to move it, and it is the one tile whose position is content. */
+.gallery-tile[data-pinned="first"] {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+/* ---------------------------------------------------------------------------
+   Masonry mode
+
+   The same grid with varying row spans, so rows stop aligning. Column spans are
+   untouched, which is why 2x2 tiles keep working — a second, column-based layout
+   engine could not offer that. The variation is driven by nth-child so it is
+   deterministic: the same fixture produces the same layout every render.
+--------------------------------------------------------------------------- */
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="1x1"] {
+  aspect-ratio: auto;
+}
+
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="1x1"]:nth-child(4n + 1) {
+  grid-row-end: span 3;
+}
+
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="1x1"]:nth-child(4n + 2) {
+  grid-row-end: span 2;
+}
+
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="1x1"]:nth-child(4n + 3) {
+  grid-row-end: span 4;
+}
+
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="1x1"]:nth-child(4n + 4) {
+  grid-row-end: span 2;
+}
+
+/* In masonry the implicit row height is a fraction of a cell, so a 1x1 spanning
+   several rows still reads as a tile rather than a sliver. */
+.gallery-row[data-layout-mode="masonry"] .gallery-grid {
+  grid-auto-rows: calc(var(--gallery-card-target) / 3);
+}
+
+.gallery-row[data-layout-mode="masonry"] .gallery-tile[data-tile-size="2x2"] {
+  grid-row-end: span 6;
+  aspect-ratio: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Media
+--------------------------------------------------------------------------- */
+.gallery-tile__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Links
+
+   The primary link is stretched over the whole tile; the Build icon is a sibling
+   anchor stacked above it. They are never nested — nested anchors are invalid
+   HTML that browsers restructure unpredictably.
+--------------------------------------------------------------------------- */
+.gallery-tile__link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.gallery-tile__build {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0.5rem;
+  border-radius: 9999px;
+  color: var(--color-sabin-white);
+
+  /* The icon sits over unpredictable photography, so it carries its own contrast
+     treatment rather than relying on the image happening to be dark in that
+     corner. A blurred chip plus a soft ring reads on both light and dark frames. */
+  /* 55% measured only 4.46:1 against one of the two real photographs. Raised to 72%
+     so the chip carries the contrast itself rather than depending on the image
+     happening to be dark in that corner. */
+  background-color: color-mix(in oklab, var(--color-sabin-dark-gray) 72%, transparent);
+  backdrop-filter: blur(6px) saturate(120%);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-sabin-white) 25%, transparent),
+    0 2px 8px color-mix(in oklab, #000 30%, transparent);
+
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
+}
+
+.gallery-tile__build svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* On pointer devices the icon can rest at reduced opacity and come forward on
+   interaction. */
+@media (hover: hover) {
+  .gallery-tile__build {
+    opacity: 0.85;
+  }
+
+  .gallery-tile:hover .gallery-tile__build,
+  .gallery-tile__build:hover,
+  .gallery-tile__build:focus-visible {
+    opacity: 1;
+    background-color: color-mix(in oklab, var(--color-sabin-orange) 90%, transparent);
+  }
+}
+
+/* Touch devices have no hover, so the icon must never be hover-revealed only —
+   a touch user would have to guess it exists. */
+@media (hover: none) {
+  .gallery-tile__build {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Focus
+
+   Every routable tile is keyboard-reachable with a clearly visible indicator.
+   The ring is drawn inside the tile because tiles are clipped by overflow.
+--------------------------------------------------------------------------- */
+.gallery-tile__link:focus-visible,
+.gallery-tile__build:focus-visible,
+.gallery-tile__cta:focus-visible,
+.gallery-tile__text-link:focus-visible {
+  outline: 3px solid var(--color-sabin-orange);
+  outline-offset: -3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Text tiles — every value here comes from a named token, never free-form.
+--------------------------------------------------------------------------- */
+.gallery-tile--text {
+  /* Named so the tile's own width can be queried independently of the row's. */
+  container-type: inline-size;
+  container-name: texttile;
+}
+
+.gallery-tile__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-tile__text-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Named padding steps. */
+.gallery-tile__text[data-padding="sm"] { padding: 1rem; }
+.gallery-tile__text[data-padding="md"] { padding: 1.5rem; }
+.gallery-tile__text[data-padding="lg"] { padding: 2rem; }
+
+/* Named background tokens. */
+.gallery-tile[data-background="orange"] { background-color: var(--color-sabin-orange); }
+.gallery-tile[data-background="yellow"] { background-color: var(--color-sabin-yellow); }
+.gallery-tile[data-background="dark-gray"] { background-color: var(--color-sabin-dark-gray); }
+.gallery-tile[data-background="white"] { background-color: var(--color-sabin-white); }
+.gallery-tile[data-background="light-gray"] { background-color: var(--color-sabin-light-gray); }
+.gallery-tile[data-background="off-white"] { background-color: var(--color-sabin-off-white); }
+
+/* Readable text colour per background, so a named background can never produce an
+   illegible tile. */
+.gallery-tile[data-background="orange"] .gallery-tile__text,
+.gallery-tile[data-background="dark-gray"] .gallery-tile__text {
+  color: var(--color-sabin-off-white);
+}
+
+.gallery-tile[data-background="yellow"] .gallery-tile__text,
+.gallery-tile[data-background="white"] .gallery-tile__text,
+.gallery-tile[data-background="light-gray"] .gallery-tile__text,
+.gallery-tile[data-background="off-white"] .gallery-tile__text {
+  color: var(--color-sabin-dark-gray);
+}
+
+/* ---------------------------------------------------------------------------
+   Text tile at narrow widths
+
+   At the two-column floor a 1x1 tile is roughly half the viewport and square,
+   which cannot hold a heading, body copy and a button legibly. Below the
+   threshold the tile becomes a short, wide block instead. Nothing is hidden and
+   no type is shrunk to fit.
+
+   Measured with a container query against the row's own inline size, so this does
+   not depend on the page width around the row.
+--------------------------------------------------------------------------- */
+/* Selector is deliberately specific enough to beat .gallery-tile[data-tile-size="…"].
+   A plain .gallery-tile--text loses to the size rule on specificity, which leaves the
+   tile square and row-spanned — it goes full width but stays a square, defeating the
+   whole point of the rule. */
+@container gallery (width < 30rem) {
+  .gallery-row .gallery-tile--text[data-tile-size] {
+    grid-column: 1 / -1;
+    grid-row-end: auto;
+    aspect-ratio: auto;
+    min-height: 11rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Text tile legibility floor
+
+   The rule above is measured against the ROW's width, which is the only
+   non-circular option: a tile cannot query its own width to then change its own
+   grid span without feeding back into that width.
+
+   That leaves one gap. On a wide viewport the row is wide, so the rule above does
+   not fire, yet an individual 1x1 tile is only about one card-target across — too
+   small for a heading, body copy and a button. A text tile therefore wants at
+   least 2x2 (see docs/craft-field-definitions.md), and this block is the guard for
+   when it isn't: padding tightens and the heading drops one step so the content
+   still fits rather than being clipped by the tile's overflow.
+
+   This is a floor to prevent content loss, not the mechanism for narrow screens —
+   there the tile goes full-width and nothing is shrunk at all.
+--------------------------------------------------------------------------- */
+@container texttile (width < 16rem) {
+  .gallery-tile__text[data-padding="lg"],
+  .gallery-tile__text[data-padding="md"] {
+    padding: 0.875rem;
+  }
+
+  .gallery-tile__text[data-padding="sm"] {
+    padding: 0.625rem;
+  }
+
+  .gallery-tile__text {
+    gap: 0.375rem;
+  }
+
+  .gallery-tile__text .copy-600 {
+    font-size: 1.375rem;
+    line-height: 1.1;
+  }
+
+  .gallery-tile__text .copy-250 {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  /* Padding tightens, but the label size does NOT drop — it is pinned to the
+     contrast floor. Shrinking it here would take the orange fill below AA. */
+  .gallery-tile__cta {
+    padding: 0.3125rem 0.5rem;
+    letter-spacing: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   CTA styles — three named options, not arbitrary colour and shape.
+--------------------------------------------------------------------------- */
+/* CTA CONTRAST — a brand constraint worth stating, because it dictates the sizing
+   below and is not obvious.
+
+   Sabin orange (#F15C24) is a mid-tone: against it, white measures 3.34:1 and
+   dark-gray 3.96:1. BOTH fail WCAG AA for normal-size text (4.5:1). Neither is a
+   valid small-label colour on an orange fill.
+
+   Both do pass the large-text bar (3.0:1), which applies from 18.66px bold. So the
+   orange button is kept and its label is set at that floor with the darker of the two
+   (3.96:1), rather than swapping the brand's primary colour out. The floor is a hard
+   minimum: the small-tile guard below tightens padding but must never reduce this
+   below 1.1875rem, or the contrast requirement silently breaks.
+
+   --gallery-cta-min-size exists so that floor has one name and one value. */
+.gallery-row {
+  --gallery-cta-min-size: 1.1875rem;
+}
+
+.gallery-tile__cta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  font-family: var(--font-sabin-primary);
+  font-weight: 700;
+  font-size: var(--gallery-cta-min-size);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.gallery-tile__cta[data-style="primary"] {
+  background-color: var(--color-sabin-orange);
+  color: var(--color-sabin-dark-gray);
+}
+
+.gallery-tile__cta[data-style="secondary"] {
+  border: 1px solid currentcolor;
+  color: inherit;
+}
+
+.gallery-tile__cta[data-style="quiet"] {
+  padding-inline: 0;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (hover: hover) {
+  .gallery-tile__cta[data-style="primary"]:hover {
+    background-color: color-mix(in oklab, var(--color-sabin-orange) 85%, #000);
+  }
+
+  .gallery-tile__cta[data-style="secondary"]:hover {
+    background-color: color-mix(in oklab, currentcolor 10%, transparent);
+  }
+}
+
+/* A CTA whose destination is not live renders as a non-interactive element, so it
+   still reads as content but is neither announced as a link nor tabbable. */
+.gallery-tile__cta[data-live="false"] {
+  opacity: 1;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------------------
+   Accessibility helpers
+--------------------------------------------------------------------------- */
+.gallery-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+
+   A hard requirement, not a nicety: momentum scrolling is a known trigger for
+   motion sensitivity. Scroll inertia and motion autoplay are handled in JS
+   (Sprint 2); tile transitions are handled here.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-row *,
+  .gallery-row *::before,
+  .gallery-row *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

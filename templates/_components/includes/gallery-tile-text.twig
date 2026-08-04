@@ -1,0 +1,75 @@
+{# ---------------------------------------------------------------------------
+   TEXT TILE — a flexible content block, not a single media element.
+
+   Params:
+     tile  text tile
+     row   the row, for theme
+
+   Every option is a named brand token resolved to a class or data attribute; no
+   free-form colour, size or spacing value can reach this template, because the
+   fixture loader rejects anything outside the token vocabulary before rendering.
+
+   The copy is real, semantic HTML — never a screenshot or an image of text — which
+   is what lets crawlers and answer engines read it.
+
+   A text tile never carries a Build icon: the icon means "configure this product",
+   and a text tile is not a product, so there is nothing for it to configure.
+
+   Link behaviour is per tile:
+     cta-only    (default) only the CTA button is routable
+     whole-tile  the entire tile is a single link
+
+   Under whole-tile the CTA renders as a non-anchor visual inside the tile's single
+   anchor, because an anchor inside an anchor is invalid HTML.
+--------------------------------------------------------------------------- #}
+
+{% set text = tile.text %}
+{% set headingClass = {
+  'display': 'copy-600',
+  'title': 'copy-400',
+  'subtitle': 'copy-250'
+}[text.headingLevel] %}
+
+{% set wholeTile = text.linkBehavior == 'whole-tile' %}
+{% set ctaLive = text.cta is not null and text.cta.live %}
+
+<div class="gallery-tile__text" data-padding="{{ text.padding }}">
+ <div class="gallery-tile__text-body">
+  <h2 class="{{ headingClass }}">{{ text.heading }}</h2>
+  <p class="copy-250">{{ text.body }}</p>
+ </div>
+
+ {% if text.media is not null %}
+  {# Optional embedded motion, under the same encoding and playback rules as a
+     motion tile: muted, looping, inline, poster-bearing. #}
+  <video class="gallery-tile__text-media" muted loop playsinline preload="none"
+   data-playback="autoplay" aria-hidden="true">
+   <source src="{{ text.media.url }}" type="video/mp4">
+  </video>
+ {% endif %}
+
+ {% if text.cta is not null %}
+  {% if wholeTile or not ctaLive %}
+   {# Not an anchor: either the whole tile already is one, or the destination is not
+      live and must not be announced as a link or sit in the tab order. #}
+   <span class="gallery-tile__cta" data-style="{{ text.cta.style }}"
+    data-live="{{ ctaLive ? 'true' : 'false' }}" aria-hidden="{{ wholeTile ? 'true' : 'false' }}"
+   >{{ text.cta.label }}</span>
+  {% else %}
+   <a class="gallery-tile__cta" data-style="{{ text.cta.style }}"
+    href="{{ text.cta.url }}"
+    {%- if text.cta.type|default('') == 'external' %} rel="noopener noreferrer"{% endif %}
+   >{{ text.cta.label }}</a>
+  {% endif %}
+ {% endif %}
+</div>
+
+{% if wholeTile and ctaLive %}
+ {# The entire tile is one link, for tiles that point out to another site. Stretched
+    over the tile as a sibling of the content, so the heading and body remain real
+    text rather than being swallowed into the anchor's label. #}
+ <a class="gallery-tile__text-link gallery-tile__link" href="{{ text.cta.url }}"
+  {%- if text.cta.type|default('') == 'external' %} rel="noopener noreferrer"{% endif %}>
+  <span class="gallery-sr-only">{{ text.cta.label }}</span>
+ </a>
+{% endif %}

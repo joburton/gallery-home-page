@@ -1,0 +1,16 @@
+{
+    "name": "sabin/gallery-row",
+    "description": "SABIN gallery predefined row - Phase 1 local Twig prototype",
+    "type": "project",
+    "require": {
+        "twig/twig": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sabin\\Harness\\": "harness/craft-shim/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

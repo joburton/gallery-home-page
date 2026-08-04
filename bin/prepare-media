@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#
+# prepare-media — one-off preparation of source media that isn't web-ready.
+#
+# Source media in images/ is never modified or renamed: the filenames carry
+# provenance. Everything generated here is written to dist/media/, which is
+# disposable and gitignored, so re-running is always safe.
+#
+# Currently this handles the supplied factory clip, which is 1920x1080 at 20Mbps
+# (~6MB for 2.4 seconds) — far too heavy for a tile, and the wrong shape. Tiles are
+# always square, so it is centre-cropped rather than letterboxed.
+#
+# Usage: bin/prepare-media [--force]
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SRC="$ROOT/images/FACTORY-SOUND_CUTTING-MACHINE.mp4"
+OUT_DIR="$ROOT/dist/media"
+OUT_MP4="$OUT_DIR/factory-cutting-machine-loop.mp4"
+OUT_POSTER="$OUT_DIR/factory-cutting-machine-poster.jpg"
+
+# Square edge for the transcoded loop. 768px covers a 2x2 tile at 2x device pixel
+# ratio (a 2in cell is 192 CSS px), so the clip stays sharp even if a Craft admin
+# resizes the tile later.
+EDGE=768
+
+FORCE=0
+[[ "${1:-}" == "--force" ]] && FORCE=1
+
+for tool in ffmpeg ffprobe; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    echo "error: $tool not found. Install with: brew install ffmpeg" >&2
+    exit 1
+  fi
+done
+
+if [[ ! -f "$SRC" ]]; then
+  echo "error: source clip not found: $SRC" >&2
+  exit 1
+fi
+
+mkdir -p "$OUT_DIR"
+
+if [[ -f "$OUT_MP4" && $FORCE -eq 0 ]]; then
+  echo "already prepared: ${OUT_MP4#"$ROOT"/} (use --force to rebuild)"
+  exit 0
+fi
+
+echo "source:  $(basename "$SRC")"
+ffprobe -v error -select_streams v:0 \
+  -show_entries stream=width,height,r_frame_rate,duration \
+  -show_entries format=size -of default=noprint_wrappers=1:nokey=0 "$SRC" | sed 's/^/         /'
+
+# -an strips audio outright rather than relying on the muted attribute alone. The
+# supplied clip already has no audio stream despite its filename, but a motion tile
+# must be silent by construction, not by the caller remembering to mute it.
+#
+# crop=ih:ih centre-crops to a square using the short edge, so nothing is stretched
+# and no bars are introduced.
+echo "encoding ${EDGE}x${EDGE} muted loop..."
+ffmpeg -v error -y -i "$SRC" \
+  -an \
+  -vf "crop=ih:ih,scale=${EDGE}:${EDGE}:flags=lanczos" \
+  -c:v libx264 -profile:v high -pix_fmt yuv420p \
+  -crf 30 -preset slow \
+  -movflags +faststart \
+  "$OUT_MP4"
+
+# The poster must be a frame from the clip itself, so a tile holding its poster is
+# indistinguishable from the same tile paused — otherwise the first frame visibly
+# jumps when playback starts.
+echo "extracting poster from first frame..."
+ffmpeg -v error -y -i "$SRC" \
+  -frames:v 1 \
+  -vf "crop=ih:ih,scale=${EDGE}:${EDGE}:flags=lanczos" \
+  -q:v 3 \
+  "$OUT_POSTER"
+
+src_bytes=$(stat -f%z "$SRC")
+out_bytes=$(stat -f%z "$OUT_MP4")
+poster_bytes=$(stat -f%z "$OUT_POSTER")
+
+printf '\nresult:\n'
+printf '  %-46s %9s bytes\n' "$(basename "$SRC") (source)" "$(printf "%'d" "$src_bytes")"
+printf '  %-46s %9s bytes  (%.1f%% of source)\n' \
+  "$(basename "$OUT_MP4")" "$(printf "%'d" "$out_bytes")" \
+  "$(echo "scale=4; $out_bytes * 100 / $src_bytes" | bc)"
+printf '  %-46s %9s bytes\n' "$(basename "$OUT_POSTER")" "$(printf "%'d" "$poster_bytes")"
+
+printf '\naudio streams in output: '
+if ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$OUT_MP4" | grep -q .; then
+  echo "PRESENT — this is a bug, motion tiles must be silent"
+  exit 1
+else
+  echo "none"
+fi
+
+echo "dimensions: $(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "$OUT_MP4")"
