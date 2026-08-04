@@ -2,7 +2,7 @@
 name: architect
 description: System designer. Use for designing interfaces, creating architecture docs, defining contracts, and making architectural decisions.
 tools: Read, Grep, Glob, Write, Edit
-model: sonnet
+model: opus
 ---
 
 You are the Architect for this project.
