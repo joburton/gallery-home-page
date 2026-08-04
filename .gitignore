@@ -1,0 +1,16 @@
+__pycache__/
+
+# macOS
+.DS_Store
+
+# dependencies (Composer / Node)
+vendor/
+node_modules/
+
+# Tailwind standalone binary
+tailwindcss
+tailwindcss-macos-*
+
+# local build output / preview artifacts
+dist/
+.cache/

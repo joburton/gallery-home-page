@@ -1,0 +1,115 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Italic;}
+{\colortbl;\red255\green255\blue255;\red16\green94\blue139;\red249\green255\blue255;\red83\green16\blue128;
+\red69\green115\blue15;\red13\green43\blue155;\red154\green0\blue18;\red150\green84\blue4;\red156\green24\blue3;
+}
+{\*\expandedcolortbl;;\cssrgb\c3529\c44706\c61569;\cssrgb\c98039\c100000\c100000;\cssrgb\c40392\c14510\c57647;
+\cssrgb\c33333\c51373\c6667;\cssrgb\c5490\c25098\c67059;\cssrgb\c67451\c5098\c8627;\cssrgb\c65882\c40392\c0;\cssrgb\c68235\c15686\c0;
+}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs20 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\{% 
+\f1\i \cf4 import 
+\f0\i0 \cf5 '_macros/color' 
+\f1\i \cf4 as 
+\f0\i0 \cf6 color \cf2 %\}\cb1 \
+\
+\cb3 <\cf7 article 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="lg:grid lg:grid-cols-2 \cf2 \{\{ \cf6 color\cf2 .\cf6 bgColor\cf2 (\cf6 row\cf2 .\cf6 theme\cf2 ) \}\}\cf5 "\cf2 >\cb1 \
+\cb3   <\cf7 div 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="flex flex-col justify-center items-center lg:aspect-square \cf2 \{\{ \cf6 row\cf2 .\cf6 imageAlignment \cf2 == \cf5 'left' \cf2 ? \cf5 'lg:order-2' \cf2 : \cf5 'lg:order-1' \cf2 \}\}\cf5 "\cf2 >\cb1 \
+\cb3    <\cf7 div\cb1 \
+\cb3     
+\f1\i \cf8 class
+\f0\i0 \cf5 ="flex flex-col \cf2 \{\{ \cf6 row\cf2 .\cf6 textVerticalAlignment\cf2 |\cf6 default\cf2 (\cf5 'between'\cf2 ) == \cf5 'centered' \cf2 ? \cf5 'justify-center' \cf2 : \cf5 'justify-between' \cf2 \}\}\cf5  items-stretch gap-8 h-full w-full px-6 md:px-16 py-20 lg:max-w-[840px] lg:ml-auto lg:mr-0 lg:pr-0 lg:pl-16 \cf2 \{\{ \cf6 color\cf2 .\cf6 textColor\cf2 (\cf6 row\cf2 .\cf6 theme\cf2 ) \}\}\cf5 "\cb1 \
+\cb3    \cf2 >\cb1 \
+\cb3     <\cf7 h2 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="copy-250"\cf2 >\{\{ \cf6 row\cf2 .\cf6 heading\cf2 |\cf6 nl2br \cf2 \}\}</\cf7 h2\cf2 >\cb1 \
+\cb3     <\cf7 div 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="space-y-5 copy-400 lg:max-w-[420px] lg:mr-auto lg:ml-0"\cf2 >\cb1 \
+\cb3      \{\{ \cf6 row\cf2 .\cf6 summary \cf2 \}\}\cb1 \
+\cb3     </\cf7 div\cf2 >\cb1 \
+\cb3    </\cf7 div\cf2 >\cb1 \
+\cb3   </\cf7 div\cf2 >\cb1 \
+\cb3   <\cf7 figure 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="relative flex flex-col justify-between items-stretch \cf2 \{\{ \cf6 row\cf2 .\cf6 imageAlignment \cf2 == \cf5 'left' \cf2 ? \cf5 'lg:order-1' \cf2 : \cf5 'lg:order-2' \cf2 \}\}\cf5 "\cf2 >\cb1 \
+\cb3    \{% 
+\f1\i \cf4 if 
+\f0\i0 \cf6 row\cf2 .\cf6 image\cf2 |\cf6 default \cf2 %\}\cb1 \
+\cb3     \{% 
+\f1\i \cf4 set 
+\f0\i0 \cf6 rawImage \cf2 = \cf6 row\cf2 .\cf6 image\cf2 .\cf6 eagerly\cf2 ().\cf6 one\cf2 () %\}\cb1 \
+\cb3     \{% 
+\f1\i \cf4 set 
+\f0\i0 \cf6 transformedImage \cf2 = \cf6 craft\cf2 .\cf6 imagerx\cf2 .\cf6 transformImage\cf2 (\cf6 rawImage\cf2 ,\cb1 \
+\cb3      [\cb1 \
+\cb3       \{ \cf6 width\cf2 : \cf9 400 \cf2 \},\cb1 \
+\cb3       \{ \cf6 width\cf2 : \cf9 800 \cf2 \},\cb1 \
+\cb3       \{ \cf6 width\cf2 : \cf9 1200 \cf2 \}\cb1 \
+\cb3      ],\cb1 \
+\cb3      \{\cb1 \
+\cb3       \cf6 mode\cf2 : \cf5 'crop'\cf2 ,\cb1 \
+\cb3       \cf6 ratio\cf2 : \cf9 1\cf2 /\cf9 1\cb1 \
+\cb3      \cf2 \}\cb1 \
+\cb3     ) %\}\cb1 \
+\cb3     <\cf7 img 
+\f1\i \cf8 loading
+\f0\i0 \cf5 ="lazy" 
+\f1\i \cf8 decoding
+\f0\i0 \cf5 ="async"\cb1 \
+\cb3      
+\f1\i \cf8 src
+\f0\i0 \cf5 ="\cf2 \{\{ \cf6 transformedImage\cf2 [\cf9 0\cf2 ].\cf6 url \cf2 \}\}\cf5 "\cb1 \
+\cb3      
+\f1\i \cf8 srcset
+\f0\i0 \cf5 ="\cf2 \{\{ \cf6 craft\cf2 .\cf6 imagerx\cf2 .\cf6 srcset\cf2 (\cf6 transformedImage\cf2 ) \}\}\cf5 "\cb1 \
+\cb3      
+\f1\i \cf8 class
+\f0\i0 \cf5 ="aspect-square object-cover object-center lg:w-full lg:h-full"\cb1 \
+\cb3      
+\f1\i \cf8 alt
+\f0\i0 \cf5 ="\cf2 \{\{ \cf6 rawImage\cf2 .\cf6 alt \cf2 \}\}\cf5 "\cb1 \
+\cb3     \cf2 />\cb1 \
+\cb3    \{% 
+\f1\i \cf4 endif 
+\f0\i0 \cf2 %\}\cb1 \
+\
+\cb3    \{% 
+\f1\i \cf4 if 
+\f0\i0 \cf6 row\cf2 .\cf6 navLink\cf2 |\cf6 default \cf2 %\}\cb1 \
+\cb3     <\cf7 a 
+\f1\i \cf8 href
+\f0\i0 \cf5 ="\cf2 \{\{ \cf6 row\cf2 .\cf6 navLink\cf2 .\cf6 url \cf2 \}\}\cf5 " 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="absolute inset-0 flex flex-col justify-between gap-5 px-6 py-12 text-white group sm:p-12 lg:p-24"\cf2 >\cb1 \
+\cb3      <\cf7 div 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="text-xl md:text-2xl lg:text-4xl"\cf2 >\cb1 \
+\cb3       \{\{ \cf6 row\cf2 .\cf6 navLink\cf2 .\cf6 label \cf2 \}\}\cb1 \
+\cb3      </\cf7 div\cf2 >\cb1 \
+\
+\cb3      <\cf7 div 
+\f1\i \cf8 class
+\f0\i0 \cf5 ="text-right"\cf2 >\cb1 \
+\cb3       \{% 
+\f1\i \cf4 include 
+\f0\i0 \cf5 '_components/includes/link-arrow' 
+\f1\i \cf4 with 
+\f0\i0 \cf2 \{\cb1 \
+\cb3        \cf6 size\cf2 : \cf5 'large'\cb1 \
+\cb3       \cf2 \} %\}\cb1 \
+\cb3      </\cf7 div\cf2 >\cb1 \
+\cb3     </\cf7 a\cf2 >\cb1 \
+\cb3    \{% 
+\f1\i \cf4 endif 
+\f0\i0 \cf2 %\}\cb1 \
+\cb3   </\cf7 figure\cf2 >\cb1 \
+\cb3 </\cf7 article\cf2 >}

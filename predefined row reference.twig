@@ -1,0 +1,76 @@
+{# ---------------------------------------------------------------------------
+   PREDEFINED ROW REFERENCE — supplied by Foster Commerce (SABIN web agency)
+
+   This is an existing production row from the SABIN site, provided as the
+   pattern the gallery row must follow. It is a REFERENCE, not a starting
+   point to edit: the gallery is a different row with different fields.
+
+   What to take from it:
+     - a single root element for the row (<article>), self-contained, with no
+       assumptions about what sits above or below it
+     - fields read off a `row` variable (row.heading, row.theme, ...)
+     - theming through the shared colour macro, not hardcoded colour classes
+     - named typography classes from the existing scale (copy-250, copy-400)
+     - image transforms + srcset via ImagerX, not a bespoke image pipeline
+     - lazy loading and async decoding already applied to media
+     - alt text taken from the asset
+     - small UI pieces pulled in as component includes
+     - a full-bleed link implemented as an absolutely positioned anchor
+       (`absolute inset-0`) over the media — this is the pattern the gallery's
+       whole-tile link should use, with the corner Build icon as a second,
+       sibling anchor stacked above it
+
+   Note: the gallery's tiles must be real <a> anchors, as here. Build 2.0's
+   gallery uses <button> for its cards; do not copy that.
+--------------------------------------------------------------------------- #}
+
+{% import '_macros/color' as color %}
+
+<article class="lg:grid lg:grid-cols-2 {{ color.bgColor(row.theme) }}">
+  <div class="flex flex-col justify-center items-center lg:aspect-square {{ row.imageAlignment == 'left' ? 'lg:order-2' : 'lg:order-1' }}">
+   <div
+    class="flex flex-col {{ row.textVerticalAlignment|default('between') == 'centered' ? 'justify-center' : 'justify-between' }} items-stretch gap-8 h-full w-full px-6 md:px-16 py-20 lg:max-w-[840px] lg:ml-auto lg:mr-0 lg:pr-0 lg:pl-16 {{ color.textColor(row.theme) }}"
+   >
+    <h2 class="copy-250">{{ row.heading|nl2br }}</h2>
+    <div class="space-y-5 copy-400 lg:max-w-[420px] lg:mr-auto lg:ml-0">
+     {{ row.summary }}
+    </div>
+   </div>
+  </div>
+  <figure class="relative flex flex-col justify-between items-stretch {{ row.imageAlignment == 'left' ? 'lg:order-1' : 'lg:order-2' }}">
+   {% if row.image|default %}
+    {% set rawImage = row.image.eagerly().one() %}
+    {% set transformedImage = craft.imagerx.transformImage(rawImage,
+     [
+      { width: 400 },
+      { width: 800 },
+      { width: 1200 }
+     ],
+     {
+      mode: 'crop',
+      ratio: 1/1
+     }
+    ) %}
+    <img loading="lazy" decoding="async"
+     src="{{ transformedImage[0].url }}"
+     srcset="{{ craft.imagerx.srcset(transformedImage) }}"
+     class="aspect-square object-cover object-center lg:w-full lg:h-full"
+     alt="{{ rawImage.alt }}"
+    />
+   {% endif %}
+
+   {% if row.navLink|default %}
+    <a href="{{ row.navLink.url }}" class="absolute inset-0 flex flex-col justify-between gap-5 px-6 py-12 text-white group sm:p-12 lg:p-24">
+     <div class="text-xl md:text-2xl lg:text-4xl">
+      {{ row.navLink.label }}
+     </div>
+
+     <div class="text-right">
+      {% include '_components/includes/link-arrow' with {
+       size: 'large'
+      } %}
+     </div>
+    </a>
+   {% endif %}
+  </figure>
+</article>
