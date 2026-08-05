@@ -8,7 +8,7 @@ The sprint boundary is deliberate: **this sprint ships no JS at all.** Everythin
 
 ## Architecture Reference
 
-[pending/gallery-row.md](../../architecture/pending/gallery-row.md) — contracts, semantics and validation rules are defined there and referenced, not duplicated here.
+[pending/gallery-row.md](../../architecture/gallery-row.md) — contracts, semantics and validation rules are defined there and referenced, not duplicated here.
 
 ## Scope
 

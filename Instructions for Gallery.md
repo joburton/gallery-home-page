@@ -1,3 +1,13 @@
+> **SUPERSEDED — historical record.** This was the brief that directed the Phase 1
+> build. That build is complete, so this document is no longer current on *what exists*.
+> It is kept because it records *why* decisions were made, which the code cannot show.
+>
+> For current state start with **`PROJECT-STATE.md`**. Authoritative today:
+> `CLAUDE.md` (invariants) → `docs/architecture/gallery-row.md` (design) →
+> `docs/craft-field-definitions.md` (Foster handoff contract).
+>
+> Where this document and those disagree, **those win**.
+
 # GALLERY — PHASE 1 BUILD BRIEF (FOR CLAUDE CODE)
 
 ## How to read this brief

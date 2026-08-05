@@ -312,7 +312,7 @@ Two knock-on effects worth knowing:
 | [CLAUDE.md](CLAUDE.md) | Principles and hard invariants |
 | [Instructions for Gallery.md](Instructions%20for%20Gallery.md) | Authoritative spec |
 | [project_brief.md](project_brief.md) | Multi-phase context |
-| [docs/architecture/pending/gallery-row.md](docs/architecture/pending/gallery-row.md) | Design, semantics, contracts |
+| [docs/architecture/gallery-row.md](docs/architecture/gallery-row.md) | Design, semantics, contracts |
 | [docs/sprints/current/spec.md](docs/sprints/current/spec.md) | Current sprint |
 | [docs/craft-field-definitions.md](docs/craft-field-definitions.md) | Field definitions for Craft |
 

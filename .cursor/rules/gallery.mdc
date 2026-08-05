@@ -1,0 +1,82 @@
+---
+description: SABIN Gallery Row — hard invariants and where the real documentation lives. Applies to all work in this project.
+globs:
+alwaysApply: true
+---
+
+# SABIN Gallery Row
+
+A **Craft CMS predefined row**, not a page. Self-contained and reorderable among other
+rows; it must never assume anything about what sits above or below it.
+
+**Start with `PROJECT-STATE.md`** — current state, how to run it, what is still open.
+
+Templates are authored against Craft's real API and a local harness fakes those calls, so
+the template never learns it isn't in Craft. That is deliberate: Phase 3 is a data-source
+swap, not a rewrite. Do not add local indirection for convenience — it becomes something
+Foster has to unpick.
+
+## Never violate
+
+- **Crawlable content is the product.** Every unique tile's alt text, copy, CTA label and
+  `href` must be in the served HTML without JS. JS may enhance; it must never be the only
+  path by which tile content reaches the DOM.
+- **Real anchors only.** No routable tile is a `<button>` or a click-handled `<div>`.
+  Build 2.0 uses `<button>` for its cards — this is the one place not to copy it.
+- **Tile links are siblings, never nested.** Whole-tile link plus corner Build icon, each
+  with its own distinct accessible label. Nested `<a>` is invalid HTML.
+- **No duplicate DOM ids.** Each unique tile appears once. Client-generated padding repeats
+  are inert: no `data-tile-id`, `aria-hidden="true"`, outside the tab order.
+- **One layout engine.** Swiss and masonry are the same dense-packed CSS Grid; they differ
+  only in whether row spans vary. Never build a second, column-based engine.
+- **Two-column floor.** Exactly two columns at 320px, never one. The gutter drives both the
+  grid `gap` and the `minmax()` floor from a single custom property — if they diverge, the
+  floor silently breaks.
+- **Settings live on the row.** Every gallery setting reads off `row.*`, is Craft-driven,
+  and is never visitor-facing. No code-side defaults: a missing field is a validation
+  error, so that no setting can live outside the row.
+- **Reduced motion is absolute.** No momentum scroll, no tile transitions, no motion
+  autoplay under `prefers-reduced-motion`. Inertia disabled must mean *no* scroll
+  interception at all — keyboard, scrollbar drag and find-in-page behave natively.
+- **Brand tokens only.** No free-form colour, size or spacing value anywhere. Text-tile
+  options are named tokens; free values are rejected at validation.
+- **Square tiles, never upscaled.** Media crops 1:1 through ImagerX honouring focal point.
+  Undersized sources render native and get flagged — never stretched.
+
+## Stack
+
+Twig + Tailwind CSS v4 + Alpine.js. PHP/Composer for the local harness only.
+
+**No React. No JS templating language or static-site generator in place of Twig** — either
+turns the Phase 3 handoff into a rewrite. Build 2.0 is a separate React app; the gallery
+links out to it per-tile and shares no code.
+
+GSAP ^3.13.0 is available site-wide if a motion need genuinely calls for it. Momentum
+scroll is deliberately ~40 lines of vanilla rAF, because guaranteeing mid-glide retargeting
+and zero interception when disabled matters more than using a library.
+
+## Conventions to follow, not reinvent
+
+`predefined row reference.twig` is Foster's production row. Match it: a single root
+element, fields read off `row`, theming through the shared colour macro, named typography
+classes from the existing scale, ImagerX for all transforms and srcset, small UI pieces as
+component includes.
+
+`templates/_macros/color.twig` is a **local stand-in**, deleted at handoff when Foster's
+real macro takes over. Never hardcode colour classes around it.
+
+## Before changing anything
+
+- `docs/architecture/gallery-row.md` — the design and its reasoning
+- `docs/craft-field-definitions.md` — the handoff contract; changing field shapes changes
+  what Foster has to build
+- `CLAUDE.md` — the full principle set
+
+`Instructions for Gallery.md` is the **superseded** original brief. Good for *why*; not
+current on *what*.
+
+## Verify, don't assert
+
+`bin/preview` to run it. `bin/preview --with-siblings` proves row independence — nothing
+about the gallery may change. Tests live in `tests/html/` and `tests/browser/`. Report
+measured numbers rather than claiming something looks fine.

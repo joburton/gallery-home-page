@@ -43,7 +43,7 @@ A single fluid CSS Grid that reflows column count continuously with viewport wid
 - Dense packing with the welcome tile explicitly pinned to the first cell; no empty cells left in the layout
 - Completing the final row depends on the canvas padding repeats, so it lands in Sprint 2 — until then a ragged last row is expected
 
-**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 
@@ -58,7 +58,7 @@ Three tile types — image, motion, text — rendered from one media field so a 
 - `live: false` destinations render non-interactive — not announced as links, not in the tab order
 - Text tiles constrained to brand tokens (named background, padding step, type level, CTA style) with `cta-only` or `whole-tile` link behaviour, going full grid width at narrow viewports
 
-**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 
@@ -73,7 +73,7 @@ The canvas is long rather than truly infinite: deep enough to scroll through, pa
 - Clone media is parked until it nears the viewport, so page weight is bounded by the unique-tile count rather than by canvas depth
 - Vertical scroll only, staying within the site's normal breakpoint margins
 
-**Status:** Complete (Sprint 2) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 2) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 
@@ -86,7 +86,7 @@ Optional momentum scrolling that gives the canvas motion rather than a static gr
 - New scroll input retargets mid-animation immediately — never queued behind a decaying glide
 - Disabled or under reduced-motion, falls back to plain native scroll with no interception left in place, preserving keyboard scroll, scrollbar drag and find-in-page
 
-**Status:** Complete (Sprint 2) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 2) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 
@@ -100,7 +100,7 @@ The row is the unit of configuration: gallery settings are fields on it, tiles a
 - Static/dynamic designation carried as data so Phase 2 can add a shuffle scheduler without restructuring
 - `tags` carried through unused in Phase 1 (Phase 2 tag-based skewing)
 
-**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 
@@ -114,7 +114,7 @@ A single documented command previews the row full-screen with no navigation, foo
 - Media prepared to budget: modern formats with responsive srcset, muted MP4 for motion, lazy-loading below the fold, no upscaling of undersized sources
 - Works from a clean checkout
 
-**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/pending/gallery-row.md)
+**Status:** Complete (Sprint 1) | **Architecture:** [gallery-row.md](architecture/gallery-row.md)
 
 ---
 

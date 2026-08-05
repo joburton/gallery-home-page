@@ -1,6 +1,6 @@
 # Gallery Row
 
-**Status:** Design draft — awaiting review
+**Status:** Accepted — implemented in sprint `gallery-row-static` (5 Aug 2026)
 
 **Scope:** Phase 1 only (~30 tiles, partial functionality). Covers all six capabilities in [CAPABILITIES.md](../../CAPABILITIES.md).
 

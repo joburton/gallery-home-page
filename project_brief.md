@@ -18,7 +18,7 @@ The container will be a pseudo infinite canvas (up/down, not left right – stay
 
 ### Content
 
-Roughly 35% are in-situ shots (product-in-a-space, the most zoomed-out type). The thirty images are supplied and in the project folder. They are mostly not square — a mix of 4:3, 3:2, 16:9 and a few panoramic — so tiles are cropped to square on render, centred by default, with Craft focal points used where the subject sits off-centre. Tile sizes stay 1x1 and 2x2; no wide tile size is added for the panoramic shots, and any image that does not read well cropped square gets swapped rather than accommodated. The small material swatch files will need re-exporting larger.
+Roughly 35% are in-situ shots (product-in-a-space, the most zoomed-out type). The thirty images are supplied and in the project folder. They are mostly not square — a mix of 4:3, 3:2, 16:9 and a few panoramic — so tiles are cropped to square on render, centred by default, with Craft focal points used where the subject sits off-centre. Tile sizes stay 1x1 and 2x2; no wide tile size is added for the panoramic shots, and any image that does not read well cropped square gets swapped rather than accommodated. Sixteen of the supplied files have a short edge under 768px, which is the minimum a 2x2 tile needs, so those want re-exporting from originals; three are AVIF files carrying the wrong extension. The brand fonts are now in place, though Neue Montreal Light is still missing and the Messina Modern licence caps monthly page views on a single domain — both worth resolving before go-live.
 
 ### Functionality
 
@@ -44,7 +44,7 @@ Non-gallery, top-level website cleanup. Quick things to do immediately that woul
 
 ## PHASE 1: BUILD THE GALLERY
 
-A predefined row built and prototyped locally, not yet live on the website. First milestone: roughly thirty tiles, partial functionality.
+A predefined row built and prototyped locally, not yet live on the website. First milestone: roughly thirty tiles, partial functionality. STATUS as of 5 Aug 2026: the Phase 1 build is complete and running locally — row template, Craft API shim, grid and inertia, media pipeline and tests, against a 33-tile fixture. Foster has confirmed the site runs Tailwind ^4.0.0 (matching our build) and that GSAP ^3.13.0 is already installed site-wide. Repo read access is being arranged. See PROJECT-STATE.md in the project folder for current state and open items.
 
   - Container: Layout and style fleshed out — Swiss grid live, masonry mode built but not necessarily turned on. Pseudo-infinite scroll working, canvas depth editable in Craft. Fully responsive, matching Build 2.0's confirmed fluid auto-fill grid mechanism (not a fixed breakpoint set).
 

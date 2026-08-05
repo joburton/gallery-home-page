@@ -21,7 +21,7 @@ fixture.json ──▶ PHP harness ──▶ Twig row template ──▶ static 
 
 This project uses LLM-assisted development. All documents are optimized for LLM context efficiency while maintaining comprehensive coverage.
 
-**Source of truth for requirements:** `Instructions for Gallery.md` is authoritative. `project_brief.md` gives wider multi-phase context. `predefined row reference.twig` is Foster's production row — the conventions to follow, not a file to edit. Requirement language in the spec is deliberate: **"must"** marks a hard invariant (never trade it away for convenience — flag it instead); **"default"** marks a starting value that *must be exposed as configuration*, never hardcoded; only text under *"Open to Claude's judgment"* is genuinely open. If something looks missing or contradictory, raise it rather than guessing.
+**Source of truth:** `PROJECT-STATE.md` orients; this file holds the invariants; `docs/architecture/gallery-row.md` holds the design; `docs/craft-field-definitions.md` is the Foster handoff contract. `Instructions for Gallery.md` is the *superseded* original brief — useful for why a decision was made, not current on what exists. `project_brief.md` gives wider multi-phase context. `predefined row reference.twig` is Foster's production row — the conventions to follow, not a file to edit. Requirement language in the spec is deliberate: **"must"** marks a hard invariant (never trade it away for convenience — flag it instead); **"default"** marks a starting value that *must be exposed as configuration*, never hardcoded; only text under *"Open to Claude's judgment"* is genuinely open. If something looks missing or contradictory, raise it rather than guessing.
 
 ---
 

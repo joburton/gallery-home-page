@@ -1,7 +1,7 @@
 sprint: gallery-row-static
 started: 2026-08-04
 current_phase: complete
-architecture: docs/architecture/pending/gallery-row.md
+architecture: docs/architecture/gallery-row.md
 capabilities:
   - tile-grid-layout-engine: [grid-contract, two-column-floor, layout-modes, dense-packing]
   - tile-rendering-routing: [three-types, dual-anchors, build-icon, live-false, brand-tokens]
