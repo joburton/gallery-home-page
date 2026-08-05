@@ -1,7 +1,8 @@
 // Verifies the two coupled/mode-dependent acceptance criteria:
 //   1. the two-column floor holds at EVERY gutter value (gap and minmax share a source)
 //   2. masonry staggers rows while 2x2 tiles still render 2x2, on the same grid
-const WebSocket = require('ws');
+// Node's built-in WebSocket via a small shim — no npm install needed.
+const WebSocket = require('./ws-compat');
 
 (async () => {
   const targets = await (await fetch('http://localhost:9222/json/list')).json();

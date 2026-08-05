@@ -195,7 +195,11 @@ final class HarnessImagerX
             $crop['w'], $crop['h'],
         );
 
-        if (!$ok || !imagewebp($dst, $file, $this->quality)) {
+        // Larger rungs carry the LCP cost, so they are compressed harder. A flat
+        // quality either wastes bytes on the big tiles or softens the small ones.
+        $quality = $outW >= 700 ? max(40, $this->quality - 8) : $this->quality;
+
+        if (!$ok || !imagewebp($dst, $file, $quality)) {
             throw new RuntimeException("Cannot write derivative: {$file}");
         }
     }

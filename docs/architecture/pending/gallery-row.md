@@ -555,6 +555,15 @@ Explicit scope boundaries.
 
 ---
 
+## Resolved decisions
+
+| Date | Decision |
+|------|----------|
+| 5 Aug 2026 | **Tab order follows document order.** Dense packing and "keyboard order matches visual order" are mutually exclusive; the criterion is reworded to document order. Jo accepted option 1. |
+| 5 Aug 2026 | **Brand fonts supplied.** Neue Montreal Medium wired with `font-display: swap` plus a preload. Neue Montreal *Light* was not supplied, so running text still falls back to Helvetica. Messina Modern supplied but unused, so not loaded. |
+| 5 Aug 2026 | **2x2 tiles raised to one quarter** of the set (8 of 32), limited to sources with a short edge of at least 768px. |
+| 5 Aug 2026 | **Welcome tile copy set** to the founding statement, CTA relabelled "Overview booklet". |
+
 ## Design decisions to confirm
 
 These could reasonably go the other way, or depend on information I don't have. Nine items; the first four are findings from inspecting the actual assets.

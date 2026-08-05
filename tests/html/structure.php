@@ -177,10 +177,46 @@ foreach ($tiles as $t) {
 }
 check('every media tile alt text appears in the served HTML', $missingAlt === 0, "{$missingAlt} missing");
 
-$textTile = $tiles[0]['text'];
-check('text tile heading in served HTML', str_contains($html, $textTile['heading']));
-check('text tile body in served HTML', str_contains($html, $textTile['body']));
-check('text tile CTA label in served HTML', str_contains($html, $textTile['cta']['label']));
+// Every text tile, not just the first: body, CTA and logo are all optional, so this
+// checks whatever each tile actually declares. Hardcoding tiles[0] meant the test broke
+// the moment the welcome tile dropped its body — and would have missed a second text
+// tile entirely.
+$textTiles = array_values(array_filter($tiles, static fn (array $t): bool => $t['type'] === 'text'));
+check('at least one text tile in the fixture', $textTiles !== [], count($textTiles) . ' found');
+
+$present = static fn (string $needle): bool => $needle !== ''
+    && (str_contains($html, $needle) || str_contains($html, htmlspecialchars($needle, ENT_QUOTES)));
+
+foreach ($textTiles as $t) {
+    $text = $t['text'];
+    $label = $t['id'];
+
+    check("{$label}: heading in served HTML", $present($text['heading']));
+
+    if (isset($text['body'])) {
+        check("{$label}: body in served HTML", $present($text['body']));
+    }
+    if (isset($text['cta']['label'])) {
+        check("{$label}: CTA label in served HTML", $present($text['cta']['label']));
+    }
+    // A logo is content, so its alt text must reach the document like any other image.
+    if (isset($text['image'])) {
+        check("{$label}: logo alt text in served HTML", $present($text['imageAlt'] ?? ''));
+    }
+}
+
+// The secondary brand face is selected by named token, never by a font name in the data.
+$secondaryBodies = array_filter(
+    $textTiles,
+    static fn (array $t): bool => ($t['text']['bodyStyle'] ?? 'primary') === 'secondary',
+);
+if ($secondaryBodies !== []) {
+    check(
+        'secondary body copy renders via the named type class',
+        $xp->query('//p[@class="copy-secondary-250"]')->length === count($secondaryBodies),
+        count($secondaryBodies) . ' expected',
+    );
+}
 
 check(
     'every img has non-empty alt',

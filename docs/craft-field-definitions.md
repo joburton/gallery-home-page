@@ -27,7 +27,17 @@ The row is authored against Craft's own API, so these must resolve as they norma
 
 1. **The type-scale and palette token names are ours, not yours.** We could not see your full scale, so `src/css/gallery.css` defines `copy-100/250/400/600` and `--color-sabin-*` following the pattern visible in the reference row. Renaming them to match your existing scale touches two files: that stylesheet and `harness/craft-shim/Tokens.php`.
 
-2. **`--gallery-cta-min-size` is a contrast floor, not a style choice.** Sabin orange is 3.96:1 against dark-gray and 3.34:1 against white — both fail WCAG AA for normal text. The CTA label is pinned at the large-text threshold (18.66px bold) so the orange button stays compliant. Reducing it silently breaks accessibility.
+2. **Two things about the webfont.** `src/css/gallery.css` references `/fonts/NeueMontreal-Medium.woff2` root-relative — change that one prefix if fonts are served elsewhere on the domain. The page must also carry the matching preload:
+
+   ```html
+   <link rel="preload" href="/fonts/NeueMontreal-Medium.woff2" as="font" type="font/woff2" crossorigin>
+   ```
+
+   **We deliberately do NOT preload.** The stylesheet declares a metrics-matched fallback (`size-adjust` plus ascent/descent overrides, tuned against a rendered specimen) so the pre-swap render occupies exactly the same space as the real face — no serif flash and no layout shift, measured at CLS 0.0000. With the shift eliminated, preloading only put 31 KB ahead of the LCP image and cost 148 ms. Re-measure before adding one.
+
+   Both faces are referenced root-relative from `/fonts/`. Note the Messina Modern licence (Luzi Type) covers a single domain with a monthly page-view cap.
+
+3. **`--gallery-cta-min-size` is a contrast floor, not a style choice.** Sabin orange is 3.96:1 against dark-gray and 3.34:1 against white — both fail WCAG AA for normal text. The CTA label is pinned at 24px, which reaches the large-text bracket on size alone, so the orange button stays compliant at the real 500 weight. (Asking for 700 with only a Medium face supplied made the browser synthesise a fake bold.) Reducing the size silently breaks accessibility.
 
 ---
 
@@ -81,13 +91,18 @@ Every styling value is a **named token**. Free-form colour, size and spacing val
 | Field | Type | Options |
 |-------|------|---------|
 | `text.heading` | text | Required |
-| `text.body` | text | Required |
+| `text.body` | text | **Optional** — a tile may carry only a heading and a button |
 | `text.headingLevel` | dropdown | `display` \| `title` \| `subtitle` |
 | `text.background` | dropdown | `orange` \| `yellow` \| `dark-gray` \| `white` \| `light-gray` \| `off-white` |
 | `text.padding` | dropdown | `sm` \| `md` \| `lg` |
 | `text.linkBehavior` | dropdown | `cta-only` (default) \| `whole-tile` |
-| `text.cta` | link + lightswitch | `{ label, url, style, live }` — `style` is `primary` \| `secondary` \| `quiet` |
-| `text.media` | asset (single) | Optional embedded motion, same rules as a motion tile |
+| `text.cta` | link + lightswitch | Optional under `cta-only` (an informational tile routes nowhere); **required** under `whole-tile`. `style` is `primary` \| `secondary` \| `quiet` |
+| `text.media` | asset (single) | Optional embedded **motion**, same rules as a motion tile |
+| `text.image` | asset (single) | Optional **still** graphic — a logo or mark. Rendered contained and bottom-aligned, never cropped |
+| `text.imageAlt` | text | **Required when `text.image` is set.** A logo is content; a reader who cannot see it still needs to know whose mark it is |
+| `text.bodyStyle` | dropdown | `primary` (Neue Montreal) \| `secondary` (Messina Modern). Selects a brand face by name, never a font name |
+
+**Roughly a quarter of tiles are `2x2`** by design (8 of 32). A `2x2` needs a source with a short edge of at least 768px, or it renders soft — the build reports any that fall short.
 
 **A text tile wants at least `2x2`.** A 1×1 text tile is roughly one card-target across, which cannot hold a heading, body and button comfortably. A guard tightens padding so nothing is clipped, but 2×2 is the intended minimum. At narrow widths any text tile automatically spans the full grid width as a short, wide block.
 

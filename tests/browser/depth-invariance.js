@@ -1,6 +1,7 @@
 // Does page weight grow with minCanvasDepth? Before clone-parking it would have, since
 // every repeat carried a real src. This is the check that the padding is genuinely free.
-const WebSocket = require('ws');
+// Node's built-in WebSocket via a small shim — no npm install needed.
+const WebSocket = require('./ws-compat');
 (async () => {
   const t = (await (await fetch('http://localhost:9222/json/list')).json()).find(x => x.type === 'page');
   const ws = new WebSocket(t.webSocketDebuggerUrl, { perMessageDeflate: false });

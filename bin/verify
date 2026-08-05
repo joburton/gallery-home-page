@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+#
+# verify — run every check in one go.
+#
+# Starts whatever it needs (preview server, headless Chrome), runs all four suites, and
+# shuts down only the things it started. Safe to run repeatedly.
+#
+# Usage:
+#   bin/verify              all suites
+#   bin/verify --quick      skip the browser suites (PHP only, no Chrome needed)
+#   bin/verify --lighthouse also run Lighthouse via npx (downloads on first use)
+#
+# Requires: php. Browser suites additionally need Node 22+ and Google Chrome — no npm
+# install, since the tests use Node's built-in WebSocket.
+
+set -uo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT"
+
+PORT=8099
+CDP_PORT=9222
+QUICK=0
+LIGHTHOUSE=0
+STARTED_SERVER=0
+STARTED_CHROME=0
+FAILED=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --quick) QUICK=1; shift ;;
+    --lighthouse) LIGHTHOUSE=1; shift ;;
+    --port) PORT="$2"; shift 2 ;;
+    -h|--help) sed -n '2,18p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+TMP="${TMPDIR:-/tmp}/sabin-verify-$$"
+
+cleanup() {
+  [[ $STARTED_CHROME -eq 1 ]] && pkill -f "remote-debugging-port=${CDP_PORT}" 2>/dev/null
+  [[ $STARTED_SERVER -eq 1 ]] && pkill -f "php -S localhost:${PORT}" 2>/dev/null
+  # Chrome holds its profile briefly after SIGTERM; without this the rm reports
+  # "Directory not empty" and leaves noise on an otherwise clean run.
+  [[ $STARTED_CHROME -eq 1 ]] && sleep 1
+  rm -rf "$TMP" 2>/dev/null
+  return 0
+}
+trap cleanup EXIT
+
+step() { printf '\n\033[1m%s\033[0m\n' "$1"; }
+result() {
+  if [[ $1 -eq 0 ]]; then printf '  \033[32mPASS\033[0m  %s\n' "$2"
+  else printf '  \033[31mFAIL\033[0m  %s\n' "$2"; FAILED=1; fi
+}
+
+# ---------------------------------------------------------------- PHP suites
+
+step "Structural assertions (no JavaScript — what a crawler sees)"
+struct_out="$(php tests/html/structure.php 2>/dev/null)"
+echo "$struct_out" | tail -1 | sed 's/^/  /'
+echo "$struct_out" | grep -q '^PASS' && result 0 "tests/html/structure.php" || result 1 "tests/html/structure.php"
+
+step "Fixture validation rules"
+if php docs/sprints/current/demos/phase1-shim.php 2>/dev/null | grep -q '^  FAIL'; then
+  php docs/sprints/current/demos/phase1-shim.php 2>/dev/null | grep '^  FAIL'
+  result 1 "validation rules"
+else
+  n=$(php docs/sprints/current/demos/phase1-shim.php 2>/dev/null | grep -c '^  ok')
+  echo "  ${n} rules fire before any render"
+  result 0 "validation rules"
+fi
+
+step "Media audit"
+php -r 'require "harness/render.php";
+  echo \Sabin\Harness\render_harness(__DIR__."/data/gallery.fixture.json")["audit"]->format();' 2>/dev/null | sed 's/^/  /'
+
+if [[ $QUICK -eq 1 ]]; then
+  step "Skipped browser suites (--quick)"
+  [[ $FAILED -eq 0 ]] && printf '\n\033[32mAll PHP checks passed.\033[0m\n' || printf '\n\033[31mSome checks failed.\033[0m\n'
+  exit $FAILED
+fi
+
+# ------------------------------------------------------------ browser suites
+
+if ! command -v node >/dev/null 2>&1; then
+  echo; echo "node not found — skipping browser suites. Install Node 22+ or use --quick." >&2
+  exit $FAILED
+fi
+
+node -e 'if (typeof WebSocket === "undefined") process.exit(1)' 2>/dev/null || {
+  echo; echo "This Node ($(node -v)) has no global WebSocket. Node 22+ required." >&2
+  exit 1
+}
+
+mkdir -p "$TMP"
+
+if ! curl -sf -m 2 "http://localhost:${PORT}/" >/dev/null 2>&1; then
+  step "Starting preview server on ${PORT}"
+  bin/preview --port "$PORT" >"$TMP/server.log" 2>&1 &
+  STARTED_SERVER=1
+  for _ in $(seq 1 40); do
+    curl -sf -m 2 "http://localhost:${PORT}/" >/dev/null 2>&1 && break
+    sleep 0.5
+  done
+  curl -sf -m 2 "http://localhost:${PORT}/" >/dev/null 2>&1 \
+    || { echo "  server did not come up; see $TMP/server.log" >&2; exit 1; }
+  echo "  up"
+fi
+
+if ! curl -sf -m 2 "http://localhost:${CDP_PORT}/json/version" >/dev/null 2>&1; then
+  step "Starting headless Chrome"
+  [[ -x "$CHROME" ]] || { echo "  Chrome not found at $CHROME" >&2; exit 1; }
+  "$CHROME" --headless=new --remote-debugging-port="$CDP_PORT" --no-first-run \
+    --no-default-browser-check --hide-scrollbars \
+    --user-data-dir="$TMP/chrome" about:blank >"$TMP/chrome.log" 2>&1 &
+  STARTED_CHROME=1
+  for _ in $(seq 1 40); do
+    curl -sf -m 2 "http://localhost:${CDP_PORT}/json/version" >/dev/null 2>&1 && break
+    sleep 0.5
+  done
+  curl -sf -m 2 "http://localhost:${CDP_PORT}/json/version" >/dev/null 2>&1 \
+    || { echo "  Chrome did not come up; see $TMP/chrome.log" >&2; exit 1; }
+  echo "  up"
+fi
+
+step "Behaviour in a real browser (momentum, motion, canvas padding)"
+s2_out="$(cd tests/browser && node sprint2.js 2>/dev/null)"
+echo "$s2_out" | tail -2 | sed 's/^/  /'
+echo "$s2_out" | grep -q '^PASS' && result 0 "tests/browser/sprint2.js" || result 1 "tests/browser/sprint2.js"
+
+step "Grid: two-column floor across gutters, and both layout modes"
+(cd tests/browser && node grid-floor-and-modes.js) | sed 's/^/  /'
+
+step "Page weight versus canvas depth"
+(cd tests/browser && node depth-invariance.js) | sed 's/^/  /'
+
+step "Keyboard order and Build-icon contrast"
+kb_out="$(cd tests/browser && node keyboard-and-icon.js 2>/dev/null)"
+echo "$kb_out" | grep -E 'reaches every|document order|matches visual|focus ring|Enter activates|contrast' | sed 's/^/  /'
+# Any 'NO' in this suite's verdict lines is a real failure. 'no — expected' is the
+# document-order note and is deliberately lower-case so it does not trip this.
+if echo "$kb_out" | grep -qE ': *NO'; then
+  result 1 "tests/browser/keyboard-and-icon.js"
+else
+  result 0 "tests/browser/keyboard-and-icon.js"
+fi
+
+if [[ $LIGHTHOUSE -eq 1 ]]; then
+  step "Lighthouse (mobile) — both throttling profiles"
+  for method in simulate devtools; do
+    CHROME_PATH="$CHROME" npx --yes lighthouse "http://localhost:${PORT}/?depth=15" \
+      --only-categories=performance,accessibility,seo,best-practices \
+      --form-factor=mobile --screenEmulation.mobile --throttling-method=$method \
+      --output=json --output-path="$TMP/lh-$method.json" \
+      --chrome-flags="--headless=new --no-sandbox --user-data-dir=$TMP/lh-$method" \
+      --quiet >/dev/null 2>&1
+    python3 - "$TMP/lh-$method.json" "$method" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1])); c = d['categories']
+lcp = d['audits']['largest-contentful-paint']['numericValue']
+print(f"  {sys.argv[2]:<9} perf {round(c['performance']['score']*100)}"
+      f"  a11y {round(c['accessibility']['score']*100)}"
+      f"  seo {round(c['seo']['score']*100)}"
+      f"  bp {round(c['best-practices']['score']*100)}"
+      f"  |  LCP {lcp:.0f}ms {'PASS' if lcp < 2500 else 'OVER TARGET'}"
+      f"  CLS {d['audits']['cumulative-layout-shift']['numericValue']:.4f}")
+PY
+  done
+fi
+
+echo
+if [[ $FAILED -eq 0 ]]; then
+  printf '\033[32mAll checks passed.\033[0m\n'
+else
+  printf '\033[31mSome checks failed — see above.\033[0m\n'
+fi
+exit $FAILED

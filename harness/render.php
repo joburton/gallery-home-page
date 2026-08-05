@@ -78,7 +78,7 @@ function render_harness(string $fixturePath, bool $withSiblings = false, array $
     $imagerx = new HarnessImagerX(
         cacheDir: PROJECT_ROOT . '/dist/transforms',
         cacheUrl: '/dist/transforms',
-        quality: 72,
+        quality: 72,   // large rungs (>=700px) drop to 64 — see HarnessImagerX::write()
     );
 
     $loader = new FixtureLoader(projectRoot: PROJECT_ROOT);

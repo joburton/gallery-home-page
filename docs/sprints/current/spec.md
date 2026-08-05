@@ -32,6 +32,7 @@ None — greenfield.
 - [ ] Served document has zero duplicate DOM ids; `data-tile-id` appears exactly once per unique tile
 - [ ] No routable tile is a `<button>` or click-handled `<div>`; `live: false` destinations render non-interactive and are not announced as links
 - [ ] Primary and Build-icon links are sibling anchors, never nested, with distinct accessible labels
+- [x] Every unique routable tile is keyboard-reachable in **document** order with a visible focus ring (reworded from "visual order" — decided 5 Aug 2026, see README)
 - [ ] Corner icon appears only on image/motion tiles with a live `buildLink`; never on the text tile
 - [ ] At 320px the grid shows exactly two columns, never one, at every `tileGap` value tested; widening reflows fluidly with no breakpoint jump
 - [ ] At 320px the welcome tile spans full grid width with nothing hidden or shrunk

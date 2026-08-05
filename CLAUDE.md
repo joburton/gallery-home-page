@@ -114,7 +114,8 @@ Always true in this codebase:
 | Real anchors only | No routable tile is a `<button>` or click-handled `<div>` |
 | Sibling, never nested anchors | Primary tile link (`absolute inset-0`) and corner Build icon are siblings, each with its own distinct accessible label |
 | No duplicate DOM ids | Each unique tile appears once in the document; only that canonical instance carries `data-tile-id` |
-| Inert padding repeats | Client-generated repeats have no `data-tile-id`, are `aria-hidden="true"`, and are outside the tab order |
+| Inert padding repeats | Client-generated repeats have no `data-tile-id`, are `aria-hidden="true"`, and are outside the tab order — but stay clickable by pointer |
+| Keyboard order is document order | Every unique routable tile is keyboard-reachable in **document** order with a visible focus ring. Dense packing means this cannot also match visual order; decided 5 Aug 2026 |
 | Dead links aren't links | `live: false` destinations render non-interactive — not announced as links, not tabbable, no placeholder navigation |
 | Icon only where it leads somewhere | Corner icon renders only on image/motion tiles with a live `buildLink`; never on a text tile |
 | One layout engine | Both Swiss and masonry are the same dense-packed CSS Grid; the modes differ only in whether row spans vary |

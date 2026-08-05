@@ -55,6 +55,15 @@ final class Tokens
     /** Named type-scale levels. */
     public const HEADING_LEVELS = ['display', 'title', 'subtitle'];
 
+    /**
+     * Which brand face the body copy uses.
+     *
+     * A named token rather than a font name, so a text tile can never select an
+     * arbitrary typeface: primary is Neue Montreal, secondary is Messina Modern —
+     * the face the brand says to use sparingly, for visual interest.
+     */
+    public const BODY_STYLES = ['primary', 'secondary'];
+
     /** Named CTA styles. */
     public const CTA_STYLES = ['primary', 'secondary', 'quiet'];
 

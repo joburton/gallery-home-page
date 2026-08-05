@@ -207,10 +207,18 @@ final class FixtureLoader
             return;
         }
 
-        foreach (['heading', 'body'] as $field) {
-            if (!isset($text[$field]) || !is_string($text[$field]) || trim($text[$field]) === '') {
-                $this->violations[] = "Tile '{$id}': text.{$field} is required";
+        // Heading is required; body is optional. A tile carrying only a statement and a
+        // button is a legitimate shape — the welcome tile is exactly that.
+        if (!isset($text['heading']) || !is_string($text['heading']) || trim($text['heading']) === '') {
+            $this->violations[] = "Tile '{$id}': text.heading is required";
+        }
+
+        if (isset($text['body'])) {
+            if (!is_string($text['body']) || trim($text['body']) === '') {
+                $this->violations[] = "Tile '{$id}': text.body must be non-empty when present";
             }
+            // Which face the body uses is a named token, never a font name.
+            $this->requireEnum($text, 'bodyStyle', Tokens::BODY_STYLES, "Tile '{$id}': text", 'bodyStyle');
         }
 
         // NamedTokensOnly — every styling value must resolve in its vocabulary, which
@@ -221,8 +229,12 @@ final class FixtureLoader
         $this->requireEnum($text, 'linkBehavior', Tokens::LINK_BEHAVIORS, "Tile '{$id}': text", 'linkBehavior');
 
         $cta = $text['cta'] ?? null;
-        if (($text['linkBehavior'] ?? null) === 'cta-only' && !is_array($cta)) {
-            $this->violations[] = "Tile '{$id}': cta-only requires a cta";
+
+        // 'whole-tile' genuinely needs somewhere to go. 'cta-only' without a cta is an
+        // informational tile — it renders no link at all, which is valid content
+        // (an event announcement, for instance) rather than a broken button.
+        if (($text['linkBehavior'] ?? null) === 'whole-tile' && !is_array($cta)) {
+            $this->violations[] = "Tile '{$id}': whole-tile requires a cta to link to";
         }
 
         if (is_array($cta)) {
@@ -234,7 +246,17 @@ final class FixtureLoader
         }
 
         if (isset($text['media']) && $text['media'] !== null) {
-            $this->requireMediaFile($text, 'media', $id, "text.media not found");
+            $this->requireMediaFile($text, 'media', $id, "Tile '{$id}': text.media not found");
+        }
+
+        // A logo or mark inside the tile. Separate from text.media, which is motion:
+        // one is a still graphic sitting in the layout, the other is a video.
+        if (isset($text['image']) && $text['image'] !== null) {
+            $this->requireMediaFile($text, 'image', $id, "Tile '{$id}': text.image not found");
+
+            if (!isset($text['imageAlt']) || !is_string($text['imageAlt']) || trim($text['imageAlt']) === '') {
+                $this->violations[] = "Tile '{$id}': text.imageAlt is required when text.image is set";
+            }
         }
     }
 
@@ -341,6 +363,13 @@ final class FixtureLoader
         if (($tile['type'] ?? null) === 'text') {
             if (isset($tile['text']['media'])) {
                 $tile['text']['media'] = $this->asset($tile['text']['media'], '');
+            }
+
+            if (isset($tile['text']['image'])) {
+                $tile['text']['image'] = $this->asset(
+                    $tile['text']['image'],
+                    $tile['text']['imageAlt'],
+                );
             }
 
             return $tile;

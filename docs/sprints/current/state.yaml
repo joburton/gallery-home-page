@@ -14,6 +14,12 @@ phases:
   4: {status: complete, name: tile-rendering-routing}
   5: {status: complete, name: full-fixture-verification}
 
+feedback_applied_5_aug_2026:
+  - welcome-tile-copy: founding statement; CTA relabelled "Overview booklet"
+  - tab-order: option 1 accepted — criterion reworded to document order
+  - brand-fonts: Neue Montreal Medium wired (swap + preload); NM Light still missing
+  - tile-mix: 2x2 raised to 8/32 (one quarter), limited to >=768px sources
+
 verification:
   structural_assertions: 32 passed, 0 failed
   validation_rules: 14 exercised, all fire before render
@@ -22,12 +28,17 @@ verification:
     accessibility: 100   # target >= 95
     seo: 100             # target 100
     best_practices: 100
-    lcp_seconds: 2.3     # target < 2.5
+    lcp_seconds: 2.40    # target < 2.5; was 2.55 after adding 2x2 tiles, recovered by size-aware WebP quality
     cls: 0
     total_blocking_time_ms: 0
   initial_viewport_budget:
-    mobile_375x667: {kb: 267.6, requests: 17, media_loaded: "15 of 31"}
-    desktop_1440x900: {kb: 306.4, requests: 33, media_loaded: "31 of 31"}
+    # First-viewport cost only — reproducible. "Images the browser opportunistically
+    # prefetches" is not a stable property; Chrome sizes its own lazy threshold.
+    mobile_390x844: {kb: 141.8, note: "identical across 3 runs; 4 tiles in fold"}
+    desktop_1440x900: {kb: 204.2, note: "25 tiles in fold"}
+    depth_invariance: "image bytes plateau at the unique-tile count regardless of minCanvasDepth"
+  tile_mix: {total: 32, "2x2": 8, "1x1": 24, ratio: "one quarter 2x2"}
+  fonts: {loaded: "NeueMontreal-Medium.woff2 (31KB, swap + preload)", missing: "NeueMontreal-Light", supplied_unused: "MessinaModern"}
   grid_measured_in_chrome:
     two_column_floor_at_320px: "holds at gutter 0,1,4,8,16,32,64"
     column_reflow: "2,2,2,3,3,5,7,9 across 320-1920px, no breakpoint jump"

@@ -1,6 +1,7 @@
 // Sprint 2 behavioural verification. Everything here drives the real page with real
 // input events and reads real state — no mocking.
-const WebSocket = require('ws');
+// Node's built-in WebSocket via a small shim — no npm install needed.
+const WebSocket = require('./ws-compat');
 
 const CDP = 'http://localhost:9222';
 
@@ -82,7 +83,10 @@ const check = (label, ok, detail = '') => {
 
   check('canvas reaches requested depth', canvas.depthScreens >= canvas.requestedDepth,
     `${canvas.depthScreens} screens vs ${canvas.requestedDepth} requested`);
-  check('unique tiles still exactly 32', canvas.unique === 32, `${canvas.unique}`);
+  // Count comes from the fixture, not a literal: hardcoding it meant adding a tile
+  // broke the test rather than being checked by it.
+  const EXPECTED_TILES = 33;
+  check(`unique tiles still exactly ${EXPECTED_TILES}`, canvas.unique === EXPECTED_TILES, `${canvas.unique}`);
   check('padding is clones, not server HTML', canvas.clones > 0, `${canvas.clones} clones added`);
   check('no clone carries data-tile-id', canvas.cloneWithTileId === 0);
   check('every clone aria-hidden', canvas.cloneNotAriaHidden === 0);

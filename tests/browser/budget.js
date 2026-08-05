@@ -5,7 +5,8 @@
 // number of tiles run to run. Reporting that alone produced a figure that did not
 // reproduce. What IS stable is the cost of the tiles actually inside the first viewport,
 // so that is reported as the budget, with the opportunistic total alongside it.
-const WebSocket = require('ws');
+// Node's built-in WebSocket via a small shim — no npm install needed.
+const WebSocket = require('./ws-compat');
 
 const run = async (profile, label) => {
   const t = (await (await fetch('http://localhost:9222/json/list')).json()).find(x => x.type === 'page');

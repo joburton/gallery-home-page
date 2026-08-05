@@ -31,15 +31,43 @@
 }[text.headingLevel] %}
 
 {% set wholeTile = text.linkBehavior == 'whole-tile' %}
-{% set ctaLive = text.cta is not null and text.cta.live %}
+{% set ctaLive = text.cta|default and text.cta.live %}
 
 <div class="gallery-tile__text" data-padding="{{ text.padding }}">
  <div class="gallery-tile__text-body">
   <h2 class="{{ headingClass }}">{{ text.heading }}</h2>
-  <p class="copy-250">{{ text.body }}</p>
+
+  {# Body is optional — a tile carrying only a statement and a button is a valid shape.
+     Which brand face it uses comes from a named token, never a font name. #}
+  {% if text.body|default %}
+   <p class="{{ text.bodyStyle|default('primary') == 'secondary' ? 'copy-secondary-250' : 'copy-250' }}">{{ text.body }}</p>
+  {% endif %}
  </div>
 
- {% if text.media is not null %}
+ {# A logo or mark. Contained rather than cropped, and it carries real alt text because
+    a logo is content — a reader who cannot see it still needs to know whose mark it is. #}
+ {% if text.image|default %}
+  {% set logo = craft.imagerx.transformImage(text.image, [
+    { width: 240 },
+    { width: 480 }
+  ], {
+    mode: 'crop',
+    ratio: 1/1
+  }) %}
+  <img
+   class="gallery-tile__logo"
+   src="{{ logo[1].url }}"
+   srcset="{{ craft.imagerx.srcset(logo) }}"
+   sizes="(max-width: 480px) 40vw, 176px"
+   width="{{ logo[1].width }}"
+   height="{{ logo[1].height }}"
+   alt="{{ text.imageAlt }}"
+   loading="lazy"
+   decoding="async"
+  >
+ {% endif %}
+
+ {% if text.media|default %}
   {# Optional embedded motion, under the same encoding and playback rules as a
      motion tile: muted, looping, inline, poster-bearing. #}
   <video class="gallery-tile__text-media" muted loop playsinline preload="none"
@@ -48,7 +76,7 @@
   </video>
  {% endif %}
 
- {% if text.cta is not null %}
+ {% if text.cta|default %}
   {% if wholeTile or not ctaLive %}
    {# Not an anchor: either the whole tile already is one, or the destination is not
       live and must not be announced as a link or sit in the tab order. #}

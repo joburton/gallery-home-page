@@ -20,22 +20,20 @@
         "size": "2x2",
         "designation": "static",
         "text": {
-          "heading": "Sabin",
+          "heading": "We are the first company founded equally for acoustics and lighting",
           "headingLevel": "display",
-          "body": "Acoustic lighting, considered. Designed and made in Seattle.",
           "background": "light-gray",
           "padding": "md",
           "linkBehavior": "cta-only",
           "media": null,
           "cta": {
-            "label": "Explore the collection",
-            "url": "/build",
+            "label": "Overview booklet",
+            "url": "/overview-booklet",
             "style": "primary",
             "live": true
           }
         }
       },
-
       {
         "id": "tile-001",
         "type": "image",
@@ -44,8 +42,17 @@
         "subject": "Linear Aero",
         "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["linear", "aero", "office", "acoustic"],
-        "destination": { "type": "product", "url": "/products/linear-aero", "live": false },
+        "tags": [
+          "linear",
+          "aero",
+          "office",
+          "acoustic"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/linear-aero",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -57,8 +64,16 @@
         "subject": "Block",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["block", "conference", "acoustic"],
-        "destination": { "type": "product", "url": "/products/block", "live": false },
+        "tags": [
+          "block",
+          "conference",
+          "acoustic"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/block",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -70,8 +85,15 @@
         "subject": "Block",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["block", "conference"],
-        "destination": { "type": "product", "url": "/products/block", "live": false },
+        "tags": [
+          "block",
+          "conference"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/block",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -83,10 +105,36 @@
         "subject": "Stainless steel cable",
         "size": "1x1",
         "contentType": "swatch",
-        "tags": ["hardware", "cable", "steel"],
-        "destination": { "type": "swatches", "url": "/swatches", "live": true },
+        "tags": [
+          "hardware",
+          "cable",
+          "steel"
+        ],
+        "destination": {
+          "type": "swatches",
+          "url": "/swatches",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
+      },
+      {
+        "id": "tile-032",
+        "type": "text",
+        "size": "2x2",
+        "designation": "static",
+        "text": {
+          "heading": "Meet us at NeoCon",
+          "headingLevel": "title",
+          "body": "June 13th–16th 2027 at the Mart, Chicago",
+          "bodyStyle": "secondary",
+          "background": "light-gray",
+          "padding": "md",
+          "linkBehavior": "cta-only",
+          "media": null,
+          "image": "/temporary images/neocon logo.png",
+          "imageAlt": "NeoCon logo"
+        }
       },
       {
         "id": "tile-005",
@@ -96,8 +144,16 @@
         "subject": "Green cord",
         "size": "1x1",
         "contentType": "swatch",
-        "tags": ["hardware", "cord", "green"],
-        "destination": { "type": "swatches", "url": "/swatches", "live": true },
+        "tags": [
+          "hardware",
+          "cord",
+          "green"
+        ],
+        "destination": {
+          "type": "swatches",
+          "url": "/swatches",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -109,8 +165,17 @@
         "subject": "Cylinder",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["cylinder", "layer", "disc", "acoustic"],
-        "destination": { "type": "product", "url": "/products/cylinder", "live": false },
+        "tags": [
+          "cylinder",
+          "layer",
+          "disc",
+          "acoustic"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/cylinder",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -122,8 +187,16 @@
         "subject": "Layer Disc",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["cylinder", "layer", "disc"],
-        "destination": { "type": "product", "url": "/products/layer-disc", "live": false },
+        "tags": [
+          "cylinder",
+          "layer",
+          "disc"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/layer-disc",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -135,8 +208,16 @@
         "subject": "Launta",
         "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["launta", "baffle", "acoustic"],
-        "destination": { "type": "product", "url": "/products/launta", "live": false },
+        "tags": [
+          "launta",
+          "baffle",
+          "acoustic"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/launta",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -148,9 +229,21 @@
         "subject": "Layer Rectangle Downlight",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["layer", "rectangle", "downlight", "cloud"],
-        "destination": { "type": "product", "url": "/products/layer-rectangle-downlight", "live": false },
-        "buildLink": { "url": "https://www.gallery.sabin.build/4/", "live": true },
+        "tags": [
+          "layer",
+          "rectangle",
+          "downlight",
+          "cloud"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/layer-rectangle-downlight",
+          "live": false
+        },
+        "buildLink": {
+          "url": "https://www.gallery.sabin.build/4/",
+          "live": true
+        },
         "designation": "dynamic"
       },
       {
@@ -161,8 +254,17 @@
         "subject": "Layer Triangle Downlight",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["layer", "triangle", "downlight", "office"],
-        "destination": { "type": "product", "url": "/products/layer-triangle-downlight", "live": false },
+        "tags": [
+          "layer",
+          "triangle",
+          "downlight",
+          "office"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/layer-triangle-downlight",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -174,8 +276,15 @@
         "subject": "Pendant",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["pendant", "library"],
-        "destination": { "type": "product", "url": "/products/pendant", "live": false },
+        "tags": [
+          "pendant",
+          "library"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/pendant",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -187,8 +296,17 @@
         "subject": "Linear Aero",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["linear", "aero", "office", "warm"],
-        "destination": { "type": "product", "url": "/products/linear-aero", "live": false },
+        "tags": [
+          "linear",
+          "aero",
+          "office",
+          "warm"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/linear-aero",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -200,8 +318,16 @@
         "subject": "Linear Raft",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["linear", "raft", "stadia"],
-        "destination": { "type": "product", "url": "/products/linear-raft", "live": false },
+        "tags": [
+          "linear",
+          "raft",
+          "stadia"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/linear-raft",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -213,8 +339,16 @@
         "subject": "Sargasso",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["sargasso", "embedded", "rendering"],
-        "destination": { "type": "product", "url": "/products/sargasso", "live": false },
+        "tags": [
+          "sargasso",
+          "embedded",
+          "rendering"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/sargasso",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -224,11 +358,22 @@
         "media": "/images/obforma-downlight-sabin-elevator-min-4.jpeg",
         "alt": "Sabin Obforma downlight with piping above an elevator lobby",
         "subject": "Obforma Downlight",
-        "size": "1x1",
+        "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["obforma", "downlight", "lobby"],
-        "destination": { "type": "product", "url": "/products/obforma-downlight", "live": false },
-        "buildLink": { "url": "https://www.gallery.sabin.build/7/", "live": true },
+        "tags": [
+          "obforma",
+          "downlight",
+          "lobby"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/obforma-downlight",
+          "live": false
+        },
+        "buildLink": {
+          "url": "https://www.gallery.sabin.build/7/",
+          "live": true
+        },
         "designation": "dynamic"
       },
       {
@@ -237,10 +382,18 @@
         "media": "/images/quad-stadia-60-kitchen-cafe-min-color-corrected-4.jpeg",
         "alt": "Sabin Quad Stadia fixtures above a cafe kitchen counter",
         "subject": "Quad Stadia",
-        "size": "1x1",
+        "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["quad", "stadia", "cafe"],
-        "destination": { "type": "product", "url": "/products/quad-stadia", "live": false },
+        "tags": [
+          "quad",
+          "stadia",
+          "cafe"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/quad-stadia",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -252,8 +405,17 @@
         "subject": "Ribbon webbing",
         "size": "1x1",
         "contentType": "swatch",
-        "tags": ["ribbon", "webbing", "hibiscus", "textile"],
-        "destination": { "type": "swatches", "url": "/swatches", "live": true },
+        "tags": [
+          "ribbon",
+          "webbing",
+          "hibiscus",
+          "textile"
+        ],
+        "destination": {
+          "type": "swatches",
+          "url": "/swatches",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -265,8 +427,16 @@
         "subject": "Acoustic lighting study",
         "size": "1x1",
         "contentType": "sketch",
-        "tags": ["sketch", "watercolour", "concept"],
-        "destination": { "type": "product", "url": "/products/acoustic-lighting", "live": false },
+        "tags": [
+          "sketch",
+          "watercolour",
+          "concept"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/acoustic-lighting",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -278,8 +448,16 @@
         "subject": "Destination Grille",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["grille", "atrium", "case-study"],
-        "destination": { "type": "product", "url": "/products/destination-grille", "live": false },
+        "tags": [
+          "grille",
+          "atrium",
+          "case-study"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/destination-grille",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -291,8 +469,16 @@
         "subject": "Destination Grille",
         "size": "1x1",
         "contentType": "detail",
-        "tags": ["grille", "detail", "case-study"],
-        "destination": { "type": "product", "url": "/products/destination-grille", "live": false },
+        "tags": [
+          "grille",
+          "detail",
+          "case-study"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/destination-grille",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -304,8 +490,16 @@
         "subject": "Cobra Lounge installation",
         "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["hospitality", "chicago", "case-study"],
-        "destination": { "type": "product", "url": "/products/cobra-lounge", "live": false },
+        "tags": [
+          "hospitality",
+          "chicago",
+          "case-study"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/cobra-lounge",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -317,8 +511,15 @@
         "subject": "installation",
         "size": "1x1",
         "contentType": "factory",
-        "tags": ["installation", "process"],
-        "destination": { "type": "about", "url": "/about", "live": true },
+        "tags": [
+          "installation",
+          "process"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -330,8 +531,16 @@
         "subject": "the Sabin factory",
         "size": "1x1",
         "contentType": "factory",
-        "tags": ["factory", "seattle", "process"],
-        "destination": { "type": "about", "url": "/about", "live": true },
+        "tags": [
+          "factory",
+          "seattle",
+          "process"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -343,8 +552,16 @@
         "subject": "Quad Diffuse",
         "size": "1x1",
         "contentType": "in-situ",
-        "tags": ["quad", "diffuse", "medical"],
-        "destination": { "type": "product", "url": "/products/quad-diffuse", "live": false },
+        "tags": [
+          "quad",
+          "diffuse",
+          "medical"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/quad-diffuse",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -356,8 +573,15 @@
         "subject": "Taper Pendant",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["taper", "pendant"],
-        "destination": { "type": "product", "url": "/products/taper-pendant", "live": false },
+        "tags": [
+          "taper",
+          "pendant"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/taper-pendant",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -369,8 +593,15 @@
         "subject": "Taper",
         "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["taper", "showroom"],
-        "destination": { "type": "product", "url": "/products/taper", "live": false },
+        "tags": [
+          "taper",
+          "showroom"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/taper",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -382,8 +613,17 @@
         "subject": "Block",
         "size": "2x2",
         "contentType": "in-situ",
-        "tags": ["block", "studio", "acoustic", "npr"],
-        "destination": { "type": "product", "url": "/products/block", "live": false },
+        "tags": [
+          "block",
+          "studio",
+          "acoustic",
+          "npr"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/block",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -395,8 +635,16 @@
         "subject": "Block",
         "size": "1x1",
         "contentType": "mid-zoom",
-        "tags": ["block", "studio", "npr"],
-        "destination": { "type": "product", "url": "/products/block", "live": false },
+        "tags": [
+          "block",
+          "studio",
+          "npr"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/block",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -408,8 +656,16 @@
         "subject": "Thread 8470",
         "size": "1x1",
         "contentType": "swatch",
-        "tags": ["thread", "textile", "hardware"],
-        "destination": { "type": "swatches", "url": "/swatches", "live": true },
+        "tags": [
+          "thread",
+          "textile",
+          "hardware"
+        ],
+        "destination": {
+          "type": "swatches",
+          "url": "/swatches",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
@@ -421,12 +677,19 @@
         "subject": "concept sketch",
         "size": "1x1",
         "contentType": "sketch",
-        "tags": ["sketch", "concept", "process"],
-        "destination": { "type": "product", "url": "/products/acoustic-lighting", "live": false },
+        "tags": [
+          "sketch",
+          "concept",
+          "process"
+        ],
+        "destination": {
+          "type": "product",
+          "url": "/products/acoustic-lighting",
+          "live": false
+        },
         "buildLink": null,
         "designation": "dynamic"
       },
-
       {
         "id": "tile-031",
         "type": "motion",
@@ -437,8 +700,16 @@
         "size": "1x1",
         "contentType": "factory",
         "playback": "autoplay",
-        "tags": ["factory", "process", "machining"],
-        "destination": { "type": "about", "url": "/about", "live": true },
+        "tags": [
+          "factory",
+          "process",
+          "machining"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": true
+        },
         "buildLink": null,
         "designation": "dynamic"
       }
