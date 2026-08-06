@@ -8,10 +8,14 @@ Phase 1 builds and prototypes it standalone against a mock JSON fixture. Phase 3
 
 ## Preview the gallery
 
-**Double-click `Preview Gallery.command`** in Finder. It picks a free port, starts the
-server and opens your browser. Close the Terminal window it leaves behind to stop.
+Three double-clickable files sit at the top of the folder — the `▶` prefix keeps them
+sorted above everything else:
 
-**Double-click `Run Checks.command`** to run every automated check and read the results.
+| Double-click | What it does |
+|--------------|--------------|
+| **▶ Preview Gallery.command** | Picks a free port, starts the server, opens your browser. Close the Terminal window it leaves behind to stop |
+| **▶ Review Notes (online).webloc** | Opens the published review page — measured results, screenshots, open questions |
+| **▶ Run Checks.command** | Runs all 82 automated checks and leaves the results on screen |
 
 From a terminal instead:
 
