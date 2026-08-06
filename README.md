@@ -8,6 +8,13 @@ Phase 1 builds and prototypes it standalone against a mock JSON fixture. Phase 3
 
 ## Preview the gallery
 
+**Double-click `Preview Gallery.command`** in Finder. It picks a free port, starts the
+server and opens your browser. Close the Terminal window it leaves behind to stop.
+
+**Double-click `Run Checks.command`** to run every automated check and read the results.
+
+From a terminal instead:
+
 ```bash
 bin/preview
 ```
