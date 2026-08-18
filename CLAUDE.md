@@ -146,7 +146,8 @@ Always true in this codebase:
 - Build a second, column-based masonry engine alongside the auto-fill grid
 - Build a bespoke image pipeline instead of ImagerX, or hardcoded colour classes instead of the colour macro
 - Rename the source media in `images/` — the descriptive names carry provenance, so assign `contentType` per tile in the fixture instead
-- Build tag filtering, tag UI, footer behaviour, navigation, page chrome, drag/reorder, or shuffle scheduling
+- Build tag filtering, tag UI, footer behaviour, navigation, page chrome, drag/reorder, or shuffle *scheduling* — the periodic, tag-skewed, cadence-driven shuffle is Phase 2. Reordering the fixture's tiles as a one-off data change is not that and is fine: see `bin/shuffle-tiles`, which permutes only `dynamic` tiles and leaves `static` ones in place, per the brief's own definition of the designation field
+- Shuffle at render time — a different document order per request defeats the crawlability the row exists for
 - Add a wide or panoramic tile size to accommodate wide source images — crop them square; swap any image that doesn't read well cropped
 - Install a Node/PostCSS toolchain or npm-install Alpine (Principle #9)
 

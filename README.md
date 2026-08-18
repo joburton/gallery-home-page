@@ -62,6 +62,33 @@ NOT IN THE GALLERY — 3 file(s) in images/ that no tile references.
 to square, strips audio, scales to 768px, and extracts a poster. It skips clips already
 prepared unless you pass `--force`.
 
+### Shuffling the order
+
+New tiles get appended, so without this they arrive as a block at the end in the order you
+added them.
+
+```bash
+bin/shuffle-tiles                 # shuffle, prints the seed it used
+bin/shuffle-tiles --seed 4271     # reproduce a specific arrangement
+bin/shuffle-tiles --dry-run       # see the result, write nothing
+```
+
+**`designation` decides what moves** — exactly as the brief defines it: *"static only means
+excluded from the periodic shuffle."* Static tiles keep their index, dynamic tiles are
+permuted around them. So the welcome tile stays in the first cell and the NeoCon
+announcement stays where it was placed, with no special cases in the script.
+
+A plain shuffle isn't enough on its own, so the result is scored and improved: it avoids
+putting near-identical photographs side by side, clustering the large tiles into one heavy
+band, or leaving three of the same content type in a row. The current order was produced
+with **seed 4271**, scoring 99 → 0 on those three measures.
+
+**This is not the Phase 2 auto-shuffle.** That one is periodic, tag-skewed and still has an
+undecided cadence. This only rewrites the fixture's starting order, once, as data — the
+template renders whatever order it is given, deterministically. Shuffling at render time
+would hand crawlers a different document on every request, which works directly against the
+crawlability the whole row is built around.
+
 ### Driving the prototype from the URL
 
 Harness-only overrides, so the fixture doesn't need editing between reloads. **None of these ship** — in production every one comes from Craft, and there is no visitor-facing control for any of them.

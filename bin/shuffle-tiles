@@ -1,0 +1,188 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * shuffle-tiles — reorder the fixture's tiles so they don't sit in the order they were added.
+ *
+ * This is a DATA tool, not runtime logic. It rewrites the order of `tiles` in the fixture
+ * once; the row template still renders whatever order it is given, deterministically. That
+ * distinction matters:
+ *
+ *   - Shuffling at render time would give crawlers a different document on every request,
+ *     which works directly against the crawlability the whole row is built around.
+ *   - It would also be Phase 2 scope. The periodic auto-shuffle — cadence, tag-based
+ *     skewing — is explicitly deferred, and this is not that. This just fixes the starting
+ *     order.
+ *
+ * `designation` does the work of deciding what moves, exactly as the brief defines it:
+ * "static only means excluded from the periodic shuffle". Static tiles keep their index;
+ * dynamic tiles are permuted among the remaining positions. So the welcome tile stays in
+ * the first cell and the NeoCon announcement stays where it was placed, with no special
+ * cases in this script.
+ *
+ * Usage:
+ *   bin/shuffle-tiles                 shuffle with a random seed (prints it)
+ *   bin/shuffle-tiles --seed 12345    reproduce a specific shuffle
+ *   bin/shuffle-tiles --dry-run       show the result, write nothing
+ */
+
+$args = array_slice($argv, 1);
+$seed = null;
+$dryRun = false;
+
+for ($i = 0; $i < count($args); $i++) {
+    switch ($args[$i]) {
+        case '--seed':
+            $seed = (int) ($args[++$i] ?? 0);
+            break;
+        case '--dry-run':
+            $dryRun = true;
+            break;
+        case '-h':
+        case '--help':
+            $doc = file_get_contents(__FILE__);
+            preg_match('#/\*\*(.*?)\*/#s', $doc, $m);
+            echo preg_replace('/^\s*\*ary?\s?/m', '', preg_replace('/^\s*\* ?/m', '', $m[1])), "\n";
+            exit(0);
+        default:
+            fwrite(STDERR, "unknown option: {$args[$i]}\n");
+            exit(1);
+    }
+}
+
+$seed ??= random_int(1, 999999);
+mt_srand($seed);
+
+$path = __DIR__ . '/../data/gallery.fixture.json';
+$data = json_decode((string) file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+$tiles = $data['row']['tiles'];
+
+/** Positions that must not move, and the tiles occupying them. */
+$fixed = [];
+$movable = [];
+foreach ($tiles as $i => $tile) {
+    if (($tile['designation'] ?? 'dynamic') === 'static') {
+        $fixed[$i] = $tile;
+    } else {
+        $movable[] = $tile;
+    }
+}
+
+/**
+ * How monotonous a given ordering reads.
+ *
+ * A plain shuffle is not enough on its own: it happily puts the two near-identical
+ * conference-room photographs side by side, or clusters every large tile into one heavy
+ * band. Scoring the result and improving it is what makes the order look composed rather
+ * than merely random.
+ */
+$penalty = static function (array $seq): int {
+    $score = 0;
+    $n = count($seq);
+    for ($i = 1; $i < $n; $i++) {
+        $a = $seq[$i - 1];
+        $b = $seq[$i];
+
+        // Near-duplicate photographs of the same product read as a mistake.
+        if (($a['subject'] ?? null) !== null && ($a['subject'] ?? null) === ($b['subject'] ?? null)) {
+            $score += 10;
+        }
+        // Large tiles side by side create a heavy band and starve the rest of the row.
+        if (($a['size'] ?? '') === '2x2' && ($b['size'] ?? '') === '2x2') {
+            $score += 4;
+        }
+        // Three of a kind in a row — all swatches, all abstract — reads as a block.
+        if ($i >= 2
+            && ($seq[$i - 2]['contentType'] ?? null) === ($a['contentType'] ?? null)
+            && ($a['contentType'] ?? null) === ($b['contentType'] ?? null)
+        ) {
+            $score += 3;
+        }
+    }
+
+    return $score;
+};
+
+/**
+ * Puts the fixed tiles back at their own indices and fills the gaps in order.
+ *
+ * Scoring has to run on this, not on the movable list: the static tiles are both large,
+ * so inserting them can create exactly the adjacencies the shuffle was trying to avoid.
+ * Scoring the subsequence reported a perfect zero while the finished order still had two
+ * large tiles touching.
+ */
+$assemble = static function (array $movable) use ($fixed, $tiles): array {
+    $out = [];
+    for ($i = 0, $n = count($tiles); $i < $n; $i++) {
+        $out[] = $fixed[$i] ?? array_shift($movable);
+    }
+
+    return $out;
+};
+
+// Fisher-Yates, seeded, so --seed reproduces a given arrangement exactly.
+for ($i = count($movable) - 1; $i > 0; $i--) {
+    $j = mt_rand(0, $i);
+    [$movable[$i], $movable[$j]] = [$movable[$j], $movable[$i]];
+}
+
+$before = $penalty($tiles);
+
+// Bounded hill-climb: try swaps, keep the ones that reduce monotony. Deterministic for a
+// given seed, and it stops as soon as it stops helping.
+$best = $penalty($assemble($movable));
+$count = count($movable);
+for ($pass = 0; $pass < 4000 && $best > 0; $pass++) {
+    $a = mt_rand(0, $count - 1);
+    $b = mt_rand(0, $count - 1);
+    if ($a === $b) {
+        continue;
+    }
+    $trial = $movable;
+    [$trial[$a], $trial[$b]] = [$trial[$b], $trial[$a]];
+    $score = $penalty($assemble($trial));
+    if ($score < $best) {
+        $movable = $trial;
+        $best = $score;
+    }
+}
+
+$result = $assemble($movable);
+$data['row']['tiles'] = $result;
+
+// --- report -----------------------------------------------------------------
+
+$summarise = static function (array $seq): string {
+    return implode(' ', array_map(
+        static fn (array $t): string => substr($t['contentType'] ?? $t['type'], 0, 4),
+        array_slice($seq, 0, 14),
+    ));
+};
+
+printf("seed %d%s\n\n", $seed, $dryRun ? '  (dry run — nothing written)' : '');
+printf("  %d tiles: %d static (kept in place), %d shuffled\n", count($tiles), count($fixed), count($movable));
+foreach ($fixed as $i => $tile) {
+    $label = $tile['subject'] ?? ($tile['text']['heading'] ?? '');
+    printf("    index %-2d stays: %s — %s\n", $i, $tile['id'], substr($label, 0, 46));
+}
+
+printf("\n  monotony score %d -> %d  (adjacent duplicates, clustered large tiles, runs of one type)\n", $before, $best);
+printf("  before: %s ...\n", $summarise($tiles));
+printf("  after:  %s ...\n", $summarise($result));
+
+$spread = [];
+foreach ($result as $i => $t) {
+    if (($t['contentType'] ?? '') === 'abstract') {
+        $spread[] = $i;
+    }
+}
+if ($spread !== []) {
+    printf("\n  abstract tiles now at: %s\n", implode(', ', $spread));
+}
+
+if (!$dryRun) {
+    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n");
+    printf("\n  written to data/gallery.fixture.json — rerun with --seed %d to reproduce\n", $seed);
+}

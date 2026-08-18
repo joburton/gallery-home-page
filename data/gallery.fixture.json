@@ -1,1085 +1,1085 @@
 {
-  "row": {
-    "type": "galleryRow",
-    "theme": "light",
-    "layoutMode": "swiss",
-    "minCanvasDepth": 15,
-    "tileGap": 4,
-    "cardTarget": "2in",
-    "maxConcurrentMotion": 4,
-    "buildIcon": null,
-    "scrollInertia": {
-      "enabled": true,
-      "speed": "medium",
-      "feel": "smooth"
-    },
-    "tiles": [
-      {
-        "id": "tile-000",
-        "type": "text",
-        "size": "2x2",
-        "designation": "static",
-        "text": {
-          "heading": "We are the first company founded equally for acoustics and lighting",
-          "headingLevel": "display",
-          "background": "light-gray",
-          "padding": "md",
-          "linkBehavior": "cta-only",
-          "media": null,
-          "cta": {
-            "label": "Overview booklet",
-            "url": "/overview-booklet",
-            "style": "primary",
-            "live": true
-          }
-        }
-      },
-      {
-        "id": "tile-001",
-        "type": "image",
-        "media": "/images/1916_BorenAve-011-edited.jpeg",
-        "alt": "Sabin acoustic lighting suspended above an open-plan office at 1916 Boren Avenue",
-        "subject": "Linear Aero",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "linear",
-          "aero",
-          "office",
-          "acoustic"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/linear-aero",
-          "live": false
+    "row": {
+        "type": "galleryRow",
+        "theme": "light",
+        "layoutMode": "swiss",
+        "minCanvasDepth": 15,
+        "tileGap": 4,
+        "cardTarget": "2in",
+        "maxConcurrentMotion": 4,
+        "buildIcon": null,
+        "scrollInertia": {
+            "enabled": true,
+            "speed": "medium",
+            "feel": "smooth"
         },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-002",
-        "type": "image",
-        "media": "/images/block-standard-conference-room-min-3.jpeg",
-        "alt": "Sabin Block acoustic panels above a standard conference room table",
-        "subject": "Block",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "block",
-          "conference",
-          "acoustic"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/block",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-003",
-        "type": "image",
-        "media": "/images/block-standard-conference-room-min-6.jpeg",
-        "alt": "Vertical view of Sabin Block panels over a conference room",
-        "subject": "Block",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "block",
-          "conference"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/block",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-004",
-        "type": "image",
-        "media": "/images/cable-stainless-steel.png",
-        "alt": "Stainless steel suspension cable finish sample",
-        "subject": "Stainless steel cable",
-        "size": "1x1",
-        "contentType": "swatch",
-        "tags": [
-          "hardware",
-          "cable",
-          "steel"
-        ],
-        "destination": {
-          "type": "swatches",
-          "url": "/swatches",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-032",
-        "type": "text",
-        "size": "2x2",
-        "designation": "static",
-        "text": {
-          "heading": "Meet us at NeoCon",
-          "headingLevel": "title",
-          "body": "June 13th–16th 2027 at the Mart, Chicago",
-          "bodyStyle": "secondary",
-          "background": "light-gray",
-          "padding": "md",
-          "linkBehavior": "cta-only",
-          "media": null,
-          "image": "/temporary images/neocon logo.png",
-          "imageAlt": "NeoCon logo"
-        }
-      },
-      {
-        "id": "tile-005",
-        "type": "image",
-        "media": "/images/cord-green.jpg",
-        "alt": "Green fabric cord finish sample",
-        "subject": "Green cord",
-        "size": "1x1",
-        "contentType": "swatch",
-        "tags": [
-          "hardware",
-          "cord",
-          "green"
-        ],
-        "destination": {
-          "type": "swatches",
-          "url": "/swatches",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-006",
-        "type": "image",
-        "media": "/images/cylinder-layer-disc-acoustic-lighting-min-3-5.jpeg",
-        "alt": "Sabin Cylinder and Layer Disc acoustic fixtures seen from below",
-        "subject": "Cylinder",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "cylinder",
-          "layer",
-          "disc",
-          "acoustic"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/cylinder",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-007",
-        "type": "image",
-        "media": "/images/cylinder-layer-disc-acoustic-lighting-min-3-6.jpeg",
-        "alt": "Cluster of Sabin Cylinder and Layer Disc acoustic fixtures at varied heights",
-        "subject": "Layer Disc",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "cylinder",
-          "layer",
-          "disc"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/layer-disc",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-008",
-        "type": "image",
-        "media": "/images/launta-27-unlit-sabin-baffles-min-7.jpeg",
-        "alt": "Unlit Sabin Launta baffles arrayed across a high ceiling",
-        "subject": "Launta",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "launta",
-          "baffle",
-          "acoustic"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/launta",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-009",
-        "type": "image",
-        "media": "/images/layer-rectangle-downlight-sabin-clouds-min-2.jpeg",
-        "alt": "Sabin Layer Rectangle downlights forming cloud-like forms overhead",
-        "subject": "Layer Rectangle Downlight",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "layer",
-          "rectangle",
-          "downlight",
-          "cloud"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/layer-rectangle-downlight",
-          "live": false
-        },
-        "buildLink": {
-          "url": "https://www.gallery.sabin.build/4/",
-          "live": true
-        },
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-010",
-        "type": "image",
-        "media": "/images/layer-triangle-downlight-sabin-law-firm-min-1.jpeg",
-        "alt": "Sabin Layer Triangle downlights in a law firm reception space",
-        "subject": "Layer Triangle Downlight",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "layer",
-          "triangle",
-          "downlight",
-          "office"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/layer-triangle-downlight",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-011",
-        "type": "image",
-        "media": "/images/library-sabin-fixtures-pendant-lights-min-5.jpeg",
-        "alt": "Sabin pendant fixtures above reading tables in a public library",
-        "subject": "Pendant",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "pendant",
-          "library"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/pendant",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-012",
-        "type": "image",
-        "media": "/images/linear-aero-rendering-ostap-office-array-WARMER.jpeg",
-        "alt": "Warm-toned rendering of a Sabin Linear Aero array over an office floor",
-        "subject": "Linear Aero",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "linear",
-          "aero",
-          "office",
-          "warm"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/linear-aero",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-013",
-        "type": "image",
-        "media": "/images/linear-raft-stadia-sabin-crop.jpeg",
-        "alt": "Sabin Linear Raft and Stadia fixtures in a stepped seating area",
-        "subject": "Linear Raft",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "linear",
-          "raft",
-          "stadia"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/linear-raft",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-014",
-        "type": "image",
-        "media": "/images/motion-sargasso-embedded-rendering-sabin-ostap-min-11.jpeg",
-        "alt": "Rendering of Sabin Sargasso fixtures embedded in a flowing ceiling form",
-        "subject": "Sargasso",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "sargasso",
-          "embedded",
-          "rendering"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/sargasso",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-015",
-        "type": "image",
-        "media": "/images/obforma-downlight-sabin-elevator-min-4.jpeg",
-        "alt": "Sabin Obforma downlight with piping above an elevator lobby",
-        "subject": "Obforma Downlight",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "obforma",
-          "downlight",
-          "lobby"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/obforma-downlight",
-          "live": false
-        },
-        "buildLink": {
-          "url": "https://www.gallery.sabin.build/7/",
-          "live": true
-        },
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-016",
-        "type": "image",
-        "media": "/images/quad-stadia-60-kitchen-cafe-min-color-corrected-4.jpeg",
-        "alt": "Sabin Quad Stadia fixtures above a cafe kitchen counter",
-        "subject": "Quad Stadia",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "quad",
-          "stadia",
-          "cafe"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/quad-stadia",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-017",
-        "type": "image",
-        "media": "/images/ribbon-webbing-swatches-sabin-june-2024-hibiscus.jpg",
-        "alt": "Sabin ribbon webbing swatches in hibiscus and adjacent tones",
-        "subject": "Ribbon webbing",
-        "size": "1x1",
-        "contentType": "swatch",
-        "tags": [
-          "ribbon",
-          "webbing",
-          "hibiscus",
-          "textile"
-        ],
-        "destination": {
-          "type": "swatches",
-          "url": "/swatches",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-018",
-        "type": "image",
-        "media": "/images/sabin-acoustic-lighting-watercolor-min-2.jpeg",
-        "alt": "Watercolour study of a Sabin acoustic lighting installation",
-        "subject": "Acoustic lighting study",
-        "size": "1x1",
-        "contentType": "sketch",
-        "tags": [
-          "sketch",
-          "watercolour",
-          "concept"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/acoustic-lighting",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-019",
-        "type": "image",
-        "media": "/images/sabin-case-studies-destination-grille--25.jpeg",
-        "alt": "Sabin Destination Grille fixtures across a double-height atrium",
-        "subject": "Destination Grille",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "grille",
-          "atrium",
-          "case-study"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/destination-grille",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-020",
-        "type": "image",
-        "media": "/images/sabin-case-studies-destination-grille--28.jpeg",
-        "alt": "Detail of Sabin Destination Grille slats against daylight",
-        "subject": "Destination Grille",
-        "size": "1x1",
-        "contentType": "detail",
-        "tags": [
-          "grille",
-          "detail",
-          "case-study"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/destination-grille",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-021",
-        "type": "image",
-        "media": "/images/sabin-cobra-lounge-chicago-case-studies-09.jpeg",
-        "alt": "Sabin fixtures above the bar at Cobra Lounge in Chicago",
-        "subject": "Cobra Lounge installation",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "hospitality",
-          "chicago",
-          "case-study"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/cobra-lounge",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-022",
-        "type": "image",
-        "media": "/images/sabin-installation-acoustic-lighting-10.jpeg",
-        "alt": "Installers fitting Sabin acoustic lighting to a ceiling grid",
-        "subject": "installation",
-        "size": "1x1",
-        "contentType": "factory",
-        "tags": [
-          "installation",
-          "process"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-023",
-        "type": "image",
-        "media": "/images/sabin-may-2025-factory-16.jpeg",
-        "alt": "Sabin factory floor in Seattle with panels in production",
-        "subject": "the Sabin factory",
-        "size": "1x1",
-        "contentType": "factory",
-        "tags": [
-          "factory",
-          "seattle",
-          "process"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-024",
-        "type": "image",
-        "media": "/images/sabin-quad-diffuse-medical-ostap-min-5.jpeg",
-        "alt": "Sabin Quad Diffuse fixtures in a medical waiting area",
-        "subject": "Quad Diffuse",
-        "size": "1x1",
-        "contentType": "in-situ",
-        "tags": [
-          "quad",
-          "diffuse",
-          "medical"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/quad-diffuse",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-025",
-        "type": "image",
-        "media": "/images/taper-pendant-sabin-lighting-gulf-min-04.jpeg",
-        "alt": "Row of Sabin Taper pendants over a long communal table",
-        "subject": "Taper Pendant",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "taper",
-          "pendant"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/taper-pendant",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-026",
-        "type": "image",
-        "media": "/images/taper-showroom-sabin-june-2026-min-5.jpeg",
-        "alt": "Sabin Taper fixtures on display in the Seattle showroom",
-        "subject": "Taper",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "taper",
-          "showroom"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/taper",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-027",
-        "type": "image",
-        "media": "/images/tenessee-chattanooga-sabin-blocks-wutc-npr--4.jpeg",
-        "alt": "Sabin Block panels in the WUTC public radio studio in Chattanooga",
-        "subject": "Block",
-        "size": "2x2",
-        "contentType": "in-situ",
-        "tags": [
-          "block",
-          "studio",
-          "acoustic",
-          "npr"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/block",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-028",
-        "type": "image",
-        "media": "/images/tenessee-chattanooga-sabin-blocks-wutc-npr-2-3.jpeg",
-        "alt": "Angled view of Sabin Block panels lining a radio studio wall",
-        "subject": "Block",
-        "size": "1x1",
-        "contentType": "mid-zoom",
-        "tags": [
-          "block",
-          "studio",
-          "npr"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/block",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-029",
-        "type": "image",
-        "media": "/images/thread-8470.jpg",
-        "alt": "Thread colour 8470 sample on the spool",
-        "subject": "Thread 8470",
-        "size": "1x1",
-        "contentType": "swatch",
-        "tags": [
-          "thread",
-          "textile",
-          "hardware"
-        ],
-        "destination": {
-          "type": "swatches",
-          "url": "/swatches",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-030",
-        "type": "image",
-        "media": "/images/tri-sketch-sabin-lighting.jpeg",
-        "alt": "Three-part concept sketch of a Sabin lighting form",
-        "subject": "concept sketch",
-        "size": "1x1",
-        "contentType": "sketch",
-        "tags": [
-          "sketch",
-          "concept",
-          "process"
-        ],
-        "destination": {
-          "type": "product",
-          "url": "/products/acoustic-lighting",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-031",
-        "type": "motion",
-        "media": "/dist/media/factory-sound-cutting-machine-loop.mp4",
-        "poster": "/dist/media/factory-sound-cutting-machine-poster.jpg",
-        "alt": "A cutting machine trimming acoustic panel material on the Sabin factory floor",
-        "subject": "the Sabin factory",
-        "size": "1x1",
-        "contentType": "factory",
-        "playback": "autoplay",
-        "tags": [
-          "factory",
-          "process",
-          "machining"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": true
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-033",
-        "type": "image",
-        "media": "/images/pexels-ali-gabr-145489869-16015743.jpg",
-        "alt": "Soft blurred forms in deep red, like a photograph lit through red glass",
-        "subject": "red study",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "red",
-          "texture"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-034",
-        "type": "image",
-        "media": "/images/pexels-ana-hidalgo-burgos-burgos-4848204-33187986.jpg",
-        "alt": "A bright yellow staircase rising in sharp diagonal steps",
-        "subject": "yellow staircase",
-        "size": "2x2",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "yellow",
-          "architecture"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-035",
-        "type": "image",
-        "media": "/images/pexels-c-2180548-33634506.jpg",
-        "alt": "Ochre paint cracked and peeling away from a plaster wall",
-        "subject": "peeling ochre paint",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "texture",
-          "ochre"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-036",
-        "type": "image",
-        "media": "/images/pexels-cottonbro-7858258.jpg",
-        "alt": "A vintage oscilloscope showing a bright trace across a green grid",
-        "subject": "oscilloscope",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "instrument",
-          "green"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-037",
-        "type": "image",
-        "media": "/images/pexels-errolflanagan-717688.jpg",
-        "alt": "A single pink-lit cloud against a deep blue sky",
-        "subject": "pink cloud",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "sky",
-          "pink"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-038",
-        "type": "image",
-        "media": "/images/pexels-eviphotography-11288849.jpg",
-        "alt": "Close-up of ripening barley ears in soft focus",
-        "subject": "barley",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "field",
-          "warm"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-039",
-        "type": "image",
-        "media": "/images/pexels-fotios-photos-11790304.jpg",
-        "alt": "A white daisy on deep blue, rendered like a cyanotype print",
-        "subject": "daisy cyanotype",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "blue",
-          "botanical"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-040",
-        "type": "image",
-        "media": "/images/pexels-ganajp-4064361.jpg",
-        "alt": "Wind-rippled desert sand in parallel ridges",
-        "subject": "rippled sand",
-        "size": "2x2",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "sand",
-          "pattern"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-041",
-        "type": "image",
-        "media": "/images/pexels-lyn-ong-2836069-12993605.jpg",
-        "alt": "Blue and white marbling swirled into feathered bands",
-        "subject": "blue marbling",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "blue",
-          "pattern"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-042",
-        "type": "image",
-        "media": "/images/pexels-mrborys-7985760.jpg",
-        "alt": "A rusted hinge on a weathered steel door",
-        "subject": "rusted hinge",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "rust",
-          "metal"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-043",
-        "type": "image",
-        "media": "/images/pexels-rdne-8197368.jpg",
-        "alt": "Rows of knobs and buttons across an audio mixing desk",
-        "subject": "mixing desk",
-        "size": "2x2",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "audio",
-          "detail"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-044",
-        "type": "image",
-        "media": "/images/pexels-tima-miroshnichenko-7205366.jpg",
-        "alt": "A photographic print developing in a tray under red darkroom light",
-        "subject": "darkroom tray",
-        "size": "1x1",
-        "contentType": "abstract",
-        "tags": [
-          "abstract",
-          "red",
-          "process"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-045",
-        "type": "motion",
-        "media": "/dist/media/14200834-uhd-3840-2160-30fps-loop.mp4",
-        "poster": "/dist/media/14200834-uhd-3840-2160-30fps-poster.jpg",
-        "alt": "A shoal of small fish drifting through turquoise water",
-        "subject": "shoal in turquoise water",
-        "size": "2x2",
-        "contentType": "abstract",
-        "playback": "autoplay",
-        "tags": [
-          "abstract",
-          "water",
-          "motion"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-046",
-        "type": "motion",
-        "media": "/dist/media/14252720-2560-1440-30fps-loop.mp4",
-        "poster": "/dist/media/14252720-2560-1440-30fps-poster.jpg",
-        "alt": "Grey storm clouds building and rolling across the sky",
-        "subject": "storm clouds",
-        "size": "1x1",
-        "contentType": "abstract",
-        "playback": "autoplay",
-        "tags": [
-          "abstract",
-          "sky",
-          "monochrome"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-047",
-        "type": "motion",
-        "media": "/dist/media/15283209-hd-1080-1920-30fps-loop.mp4",
-        "poster": "/dist/media/15283209-hd-1080-1920-30fps-poster.jpg",
-        "alt": "Magenta liquid rippling outward in slow waves",
-        "subject": "magenta ripples",
-        "size": "1x1",
-        "contentType": "abstract",
-        "playback": "autoplay",
-        "tags": [
-          "abstract",
-          "magenta",
-          "liquid"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-048",
-        "type": "motion",
-        "media": "/dist/media/3987705-hd-1920-1080-24fps-loop.mp4",
-        "poster": "/dist/media/3987705-hd-1920-1080-24fps-poster.jpg",
-        "alt": "Long green grass moving in the wind",
-        "subject": "grass in wind",
-        "size": "1x1",
-        "contentType": "abstract",
-        "playback": "autoplay",
-        "tags": [
-          "abstract",
-          "green",
-          "motion"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      },
-      {
-        "id": "tile-049",
-        "type": "motion",
-        "media": "/dist/media/7946014-uhd-1440-2732-30fps-loop.mp4",
-        "poster": "/dist/media/7946014-uhd-1440-2732-30fps-poster.jpg",
-        "alt": "Dark fabric shifting in deep folds, almost black",
-        "subject": "dark drapery",
-        "size": "1x1",
-        "contentType": "abstract",
-        "playback": "autoplay",
-        "tags": [
-          "abstract",
-          "dark",
-          "fabric"
-        ],
-        "destination": {
-          "type": "about",
-          "url": "/about",
-          "live": false
-        },
-        "buildLink": null,
-        "designation": "dynamic"
-      }
-    ]
-  }
+        "tiles": [
+            {
+                "id": "tile-000",
+                "type": "text",
+                "size": "2x2",
+                "designation": "static",
+                "text": {
+                    "heading": "We are the first company founded equally for acoustics and lighting",
+                    "headingLevel": "display",
+                    "background": "light-gray",
+                    "padding": "md",
+                    "linkBehavior": "cta-only",
+                    "media": null,
+                    "cta": {
+                        "label": "Overview booklet",
+                        "url": "/overview-booklet",
+                        "style": "primary",
+                        "live": true
+                    }
+                }
+            },
+            {
+                "id": "tile-022",
+                "type": "image",
+                "media": "/images/sabin-installation-acoustic-lighting-10.jpeg",
+                "alt": "Installers fitting Sabin acoustic lighting to a ceiling grid",
+                "subject": "installation",
+                "size": "1x1",
+                "contentType": "factory",
+                "tags": [
+                    "installation",
+                    "process"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-042",
+                "type": "image",
+                "media": "/images/pexels-mrborys-7985760.jpg",
+                "alt": "A rusted hinge on a weathered steel door",
+                "subject": "rusted hinge",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "rust",
+                    "metal"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-041",
+                "type": "image",
+                "media": "/images/pexels-lyn-ong-2836069-12993605.jpg",
+                "alt": "Blue and white marbling swirled into feathered bands",
+                "subject": "blue marbling",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "blue",
+                    "pattern"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-011",
+                "type": "image",
+                "media": "/images/library-sabin-fixtures-pendant-lights-min-5.jpeg",
+                "alt": "Sabin pendant fixtures above reading tables in a public library",
+                "subject": "Pendant",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "pendant",
+                    "library"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/pendant",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-032",
+                "type": "text",
+                "size": "2x2",
+                "designation": "static",
+                "text": {
+                    "heading": "Meet us at NeoCon",
+                    "headingLevel": "title",
+                    "body": "June 13th–16th 2027 at the Mart, Chicago",
+                    "bodyStyle": "secondary",
+                    "background": "light-gray",
+                    "padding": "md",
+                    "linkBehavior": "cta-only",
+                    "media": null,
+                    "image": "/temporary images/neocon logo.png",
+                    "imageAlt": "NeoCon logo"
+                }
+            },
+            {
+                "id": "tile-035",
+                "type": "image",
+                "media": "/images/pexels-c-2180548-33634506.jpg",
+                "alt": "Ochre paint cracked and peeling away from a plaster wall",
+                "subject": "peeling ochre paint",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "texture",
+                    "ochre"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-019",
+                "type": "image",
+                "media": "/images/sabin-case-studies-destination-grille--25.jpeg",
+                "alt": "Sabin Destination Grille fixtures across a double-height atrium",
+                "subject": "Destination Grille",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "grille",
+                    "atrium",
+                    "case-study"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/destination-grille",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-046",
+                "type": "motion",
+                "media": "/dist/media/14252720-2560-1440-30fps-loop.mp4",
+                "poster": "/dist/media/14252720-2560-1440-30fps-poster.jpg",
+                "alt": "Grey storm clouds building and rolling across the sky",
+                "subject": "storm clouds",
+                "size": "1x1",
+                "contentType": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "sky",
+                    "monochrome"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-006",
+                "type": "image",
+                "media": "/images/cylinder-layer-disc-acoustic-lighting-min-3-5.jpeg",
+                "alt": "Sabin Cylinder and Layer Disc acoustic fixtures seen from below",
+                "subject": "Cylinder",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "cylinder",
+                    "layer",
+                    "disc",
+                    "acoustic"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/cylinder",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-037",
+                "type": "image",
+                "media": "/images/pexels-errolflanagan-717688.jpg",
+                "alt": "A single pink-lit cloud against a deep blue sky",
+                "subject": "pink cloud",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "sky",
+                    "pink"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-003",
+                "type": "image",
+                "media": "/images/block-standard-conference-room-min-6.jpeg",
+                "alt": "Vertical view of Sabin Block panels over a conference room",
+                "subject": "Block",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "block",
+                    "conference"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/block",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-039",
+                "type": "image",
+                "media": "/images/pexels-fotios-photos-11790304.jpg",
+                "alt": "A white daisy on deep blue, rendered like a cyanotype print",
+                "subject": "daisy cyanotype",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "blue",
+                    "botanical"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-045",
+                "type": "motion",
+                "media": "/dist/media/14200834-uhd-3840-2160-30fps-loop.mp4",
+                "poster": "/dist/media/14200834-uhd-3840-2160-30fps-poster.jpg",
+                "alt": "A shoal of small fish drifting through turquoise water",
+                "subject": "shoal in turquoise water",
+                "size": "2x2",
+                "contentType": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "water",
+                    "motion"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-020",
+                "type": "image",
+                "media": "/images/sabin-case-studies-destination-grille--28.jpeg",
+                "alt": "Detail of Sabin Destination Grille slats against daylight",
+                "subject": "Destination Grille",
+                "size": "1x1",
+                "contentType": "detail",
+                "tags": [
+                    "grille",
+                    "detail",
+                    "case-study"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/destination-grille",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-026",
+                "type": "image",
+                "media": "/images/taper-showroom-sabin-june-2026-min-5.jpeg",
+                "alt": "Sabin Taper fixtures on display in the Seattle showroom",
+                "subject": "Taper",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "taper",
+                    "showroom"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/taper",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-012",
+                "type": "image",
+                "media": "/images/linear-aero-rendering-ostap-office-array-WARMER.jpeg",
+                "alt": "Warm-toned rendering of a Sabin Linear Aero array over an office floor",
+                "subject": "Linear Aero",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "linear",
+                    "aero",
+                    "office",
+                    "warm"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/linear-aero",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-004",
+                "type": "image",
+                "media": "/images/cable-stainless-steel.png",
+                "alt": "Stainless steel suspension cable finish sample",
+                "subject": "Stainless steel cable",
+                "size": "1x1",
+                "contentType": "swatch",
+                "tags": [
+                    "hardware",
+                    "cable",
+                    "steel"
+                ],
+                "destination": {
+                    "type": "swatches",
+                    "url": "/swatches",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-027",
+                "type": "image",
+                "media": "/images/tenessee-chattanooga-sabin-blocks-wutc-npr--4.jpeg",
+                "alt": "Sabin Block panels in the WUTC public radio studio in Chattanooga",
+                "subject": "Block",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "block",
+                    "studio",
+                    "acoustic",
+                    "npr"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/block",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-038",
+                "type": "image",
+                "media": "/images/pexels-eviphotography-11288849.jpg",
+                "alt": "Close-up of ripening barley ears in soft focus",
+                "subject": "barley",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "field",
+                    "warm"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-015",
+                "type": "image",
+                "media": "/images/obforma-downlight-sabin-elevator-min-4.jpeg",
+                "alt": "Sabin Obforma downlight with piping above an elevator lobby",
+                "subject": "Obforma Downlight",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "obforma",
+                    "downlight",
+                    "lobby"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/obforma-downlight",
+                    "live": false
+                },
+                "buildLink": {
+                    "url": "https://www.gallery.sabin.build/7/",
+                    "live": true
+                },
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-048",
+                "type": "motion",
+                "media": "/dist/media/3987705-hd-1920-1080-24fps-loop.mp4",
+                "poster": "/dist/media/3987705-hd-1920-1080-24fps-poster.jpg",
+                "alt": "Long green grass moving in the wind",
+                "subject": "grass in wind",
+                "size": "1x1",
+                "contentType": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "green",
+                    "motion"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-028",
+                "type": "image",
+                "media": "/images/tenessee-chattanooga-sabin-blocks-wutc-npr-2-3.jpeg",
+                "alt": "Angled view of Sabin Block panels lining a radio studio wall",
+                "subject": "Block",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "block",
+                    "studio",
+                    "npr"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/block",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-049",
+                "type": "motion",
+                "media": "/dist/media/7946014-uhd-1440-2732-30fps-loop.mp4",
+                "poster": "/dist/media/7946014-uhd-1440-2732-30fps-poster.jpg",
+                "alt": "Dark fabric shifting in deep folds, almost black",
+                "subject": "dark drapery",
+                "size": "1x1",
+                "contentType": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "dark",
+                    "fabric"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-023",
+                "type": "image",
+                "media": "/images/sabin-may-2025-factory-16.jpeg",
+                "alt": "Sabin factory floor in Seattle with panels in production",
+                "subject": "the Sabin factory",
+                "size": "1x1",
+                "contentType": "factory",
+                "tags": [
+                    "factory",
+                    "seattle",
+                    "process"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-024",
+                "type": "image",
+                "media": "/images/sabin-quad-diffuse-medical-ostap-min-5.jpeg",
+                "alt": "Sabin Quad Diffuse fixtures in a medical waiting area",
+                "subject": "Quad Diffuse",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "quad",
+                    "diffuse",
+                    "medical"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/quad-diffuse",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-014",
+                "type": "image",
+                "media": "/images/motion-sargasso-embedded-rendering-sabin-ostap-min-11.jpeg",
+                "alt": "Rendering of Sabin Sargasso fixtures embedded in a flowing ceiling form",
+                "subject": "Sargasso",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "sargasso",
+                    "embedded",
+                    "rendering"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/sargasso",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-047",
+                "type": "motion",
+                "media": "/dist/media/15283209-hd-1080-1920-30fps-loop.mp4",
+                "poster": "/dist/media/15283209-hd-1080-1920-30fps-poster.jpg",
+                "alt": "Magenta liquid rippling outward in slow waves",
+                "subject": "magenta ripples",
+                "size": "1x1",
+                "contentType": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "magenta",
+                    "liquid"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-013",
+                "type": "image",
+                "media": "/images/linear-raft-stadia-sabin-crop.jpeg",
+                "alt": "Sabin Linear Raft and Stadia fixtures in a stepped seating area",
+                "subject": "Linear Raft",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "linear",
+                    "raft",
+                    "stadia"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/linear-raft",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-040",
+                "type": "image",
+                "media": "/images/pexels-ganajp-4064361.jpg",
+                "alt": "Wind-rippled desert sand in parallel ridges",
+                "subject": "rippled sand",
+                "size": "2x2",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "sand",
+                    "pattern"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-044",
+                "type": "image",
+                "media": "/images/pexels-tima-miroshnichenko-7205366.jpg",
+                "alt": "A photographic print developing in a tray under red darkroom light",
+                "subject": "darkroom tray",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "red",
+                    "process"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-008",
+                "type": "image",
+                "media": "/images/launta-27-unlit-sabin-baffles-min-7.jpeg",
+                "alt": "Unlit Sabin Launta baffles arrayed across a high ceiling",
+                "subject": "Launta",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "launta",
+                    "baffle",
+                    "acoustic"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/launta",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-018",
+                "type": "image",
+                "media": "/images/sabin-acoustic-lighting-watercolor-min-2.jpeg",
+                "alt": "Watercolour study of a Sabin acoustic lighting installation",
+                "subject": "Acoustic lighting study",
+                "size": "1x1",
+                "contentType": "sketch",
+                "tags": [
+                    "sketch",
+                    "watercolour",
+                    "concept"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/acoustic-lighting",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-031",
+                "type": "motion",
+                "media": "/dist/media/factory-sound-cutting-machine-loop.mp4",
+                "poster": "/dist/media/factory-sound-cutting-machine-poster.jpg",
+                "alt": "A cutting machine trimming acoustic panel material on the Sabin factory floor",
+                "subject": "the Sabin factory",
+                "size": "1x1",
+                "contentType": "factory",
+                "playback": "autoplay",
+                "tags": [
+                    "factory",
+                    "process",
+                    "machining"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-005",
+                "type": "image",
+                "media": "/images/cord-green.jpg",
+                "alt": "Green fabric cord finish sample",
+                "subject": "Green cord",
+                "size": "1x1",
+                "contentType": "swatch",
+                "tags": [
+                    "hardware",
+                    "cord",
+                    "green"
+                ],
+                "destination": {
+                    "type": "swatches",
+                    "url": "/swatches",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-001",
+                "type": "image",
+                "media": "/images/1916_BorenAve-011-edited.jpeg",
+                "alt": "Sabin acoustic lighting suspended above an open-plan office at 1916 Boren Avenue",
+                "subject": "Linear Aero",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "linear",
+                    "aero",
+                    "office",
+                    "acoustic"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/linear-aero",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-029",
+                "type": "image",
+                "media": "/images/thread-8470.jpg",
+                "alt": "Thread colour 8470 sample on the spool",
+                "subject": "Thread 8470",
+                "size": "1x1",
+                "contentType": "swatch",
+                "tags": [
+                    "thread",
+                    "textile",
+                    "hardware"
+                ],
+                "destination": {
+                    "type": "swatches",
+                    "url": "/swatches",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-034",
+                "type": "image",
+                "media": "/images/pexels-ana-hidalgo-burgos-burgos-4848204-33187986.jpg",
+                "alt": "A bright yellow staircase rising in sharp diagonal steps",
+                "subject": "yellow staircase",
+                "size": "2x2",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "yellow",
+                    "architecture"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-025",
+                "type": "image",
+                "media": "/images/taper-pendant-sabin-lighting-gulf-min-04.jpeg",
+                "alt": "Row of Sabin Taper pendants over a long communal table",
+                "subject": "Taper Pendant",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "taper",
+                    "pendant"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/taper-pendant",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-007",
+                "type": "image",
+                "media": "/images/cylinder-layer-disc-acoustic-lighting-min-3-6.jpeg",
+                "alt": "Cluster of Sabin Cylinder and Layer Disc acoustic fixtures at varied heights",
+                "subject": "Layer Disc",
+                "size": "1x1",
+                "contentType": "mid-zoom",
+                "tags": [
+                    "cylinder",
+                    "layer",
+                    "disc"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/layer-disc",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-043",
+                "type": "image",
+                "media": "/images/pexels-rdne-8197368.jpg",
+                "alt": "Rows of knobs and buttons across an audio mixing desk",
+                "subject": "mixing desk",
+                "size": "2x2",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "audio",
+                    "detail"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-036",
+                "type": "image",
+                "media": "/images/pexels-cottonbro-7858258.jpg",
+                "alt": "A vintage oscilloscope showing a bright trace across a green grid",
+                "subject": "oscilloscope",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "instrument",
+                    "green"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-010",
+                "type": "image",
+                "media": "/images/layer-triangle-downlight-sabin-law-firm-min-1.jpeg",
+                "alt": "Sabin Layer Triangle downlights in a law firm reception space",
+                "subject": "Layer Triangle Downlight",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "layer",
+                    "triangle",
+                    "downlight",
+                    "office"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/layer-triangle-downlight",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-016",
+                "type": "image",
+                "media": "/images/quad-stadia-60-kitchen-cafe-min-color-corrected-4.jpeg",
+                "alt": "Sabin Quad Stadia fixtures above a cafe kitchen counter",
+                "subject": "Quad Stadia",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "quad",
+                    "stadia",
+                    "cafe"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/quad-stadia",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-033",
+                "type": "image",
+                "media": "/images/pexels-ali-gabr-145489869-16015743.jpg",
+                "alt": "Soft blurred forms in deep red, like a photograph lit through red glass",
+                "subject": "red study",
+                "size": "1x1",
+                "contentType": "abstract",
+                "tags": [
+                    "abstract",
+                    "red",
+                    "texture"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-021",
+                "type": "image",
+                "media": "/images/sabin-cobra-lounge-chicago-case-studies-09.jpeg",
+                "alt": "Sabin fixtures above the bar at Cobra Lounge in Chicago",
+                "subject": "Cobra Lounge installation",
+                "size": "2x2",
+                "contentType": "in-situ",
+                "tags": [
+                    "hospitality",
+                    "chicago",
+                    "case-study"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/cobra-lounge",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-030",
+                "type": "image",
+                "media": "/images/tri-sketch-sabin-lighting.jpeg",
+                "alt": "Three-part concept sketch of a Sabin lighting form",
+                "subject": "concept sketch",
+                "size": "1x1",
+                "contentType": "sketch",
+                "tags": [
+                    "sketch",
+                    "concept",
+                    "process"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/acoustic-lighting",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-017",
+                "type": "image",
+                "media": "/images/ribbon-webbing-swatches-sabin-june-2024-hibiscus.jpg",
+                "alt": "Sabin ribbon webbing swatches in hibiscus and adjacent tones",
+                "subject": "Ribbon webbing",
+                "size": "1x1",
+                "contentType": "swatch",
+                "tags": [
+                    "ribbon",
+                    "webbing",
+                    "hibiscus",
+                    "textile"
+                ],
+                "destination": {
+                    "type": "swatches",
+                    "url": "/swatches",
+                    "live": true
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-002",
+                "type": "image",
+                "media": "/images/block-standard-conference-room-min-3.jpeg",
+                "alt": "Sabin Block acoustic panels above a standard conference room table",
+                "subject": "Block",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "block",
+                    "conference",
+                    "acoustic"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/block",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-009",
+                "type": "image",
+                "media": "/images/layer-rectangle-downlight-sabin-clouds-min-2.jpeg",
+                "alt": "Sabin Layer Rectangle downlights forming cloud-like forms overhead",
+                "subject": "Layer Rectangle Downlight",
+                "size": "1x1",
+                "contentType": "in-situ",
+                "tags": [
+                    "layer",
+                    "rectangle",
+                    "downlight",
+                    "cloud"
+                ],
+                "destination": {
+                    "type": "product",
+                    "url": "/products/layer-rectangle-downlight",
+                    "live": false
+                },
+                "buildLink": {
+                    "url": "https://www.gallery.sabin.build/4/",
+                    "live": true
+                },
+                "designation": "dynamic"
+            }
+        ]
+    }
 }

@@ -37,6 +37,12 @@ verification:
     mobile_390x844: {kb: 141.8, note: "identical across 3 runs; 4 tiles in fold"}
     desktop_1440x900: {kb: 204.2, note: "25 tiles in fold"}
     depth_invariance: "image bytes plateau at the unique-tile count regardless of minCanvasDepth"
+  tile_order:
+    shuffled: true
+    seed: 4271
+    method: "dynamic tiles permuted, static tiles hold their index (bin/shuffle-tiles)"
+    monotony_score: "99 -> 0 (adjacent duplicate subjects, clustered 2x2, runs of one contentType)"
+    note: "one-off data reorder, NOT the Phase 2 periodic auto-shuffle"
   tile_mix: {total: 32, "2x2": 8, "1x1": 24, ratio: "one quarter 2x2"}
   fonts: {loaded: "NeueMontreal-Medium.woff2 (31KB, swap + preload)", missing: "NeueMontreal-Light", supplied_unused: "MessinaModern"}
   grid_measured_in_chrome:

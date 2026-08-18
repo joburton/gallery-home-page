@@ -299,15 +299,41 @@ const check = (label, ok, detail = '') => {
     return { playing: !v.paused, marked: v.dataset.motionPlaying === 'true', count: window.__gallery[0].motion.playing() }; })()`);
   check('motion plays while onscreen', onscreen.playing === true, `playing=${onscreen.count}`);
 
-  await s.ev(`scrollTo(0, 0)`);
-  await new Promise((r) => setTimeout(r, 1200));
+  // Scroll the chosen tile well ABOVE the viewport rather than scrolling to the top of
+  // the page. With several motion tiles spread through the canvas, the top of the page is
+  // no longer guaranteed to be away from this one — it may sit in the first screen and be
+  // correctly playing, which made this read as a failure when nothing was wrong.
+  await s.ev(`(() => { const v=document.querySelector('video[data-playback]');
+    const top = v.closest('[data-tile-id]').offsetTop;
+    scrollTo(0, top + innerHeight * 4); })()`);
+  await new Promise((r) => setTimeout(r, 1400));
   const offscreen = await s.ev(`(() => { const v=document.querySelector('video[data-playback]');
-    return { paused: v.paused, count: window.__gallery[0].motion.playing() }; })()`);
-  check('motion pauses when scrolled away', offscreen.paused === true, `playing=${offscreen.count}`);
+    const r = v.getBoundingClientRect();
+    return { paused: v.paused, onscreen: r.bottom > 0 && r.top < innerHeight,
+             count: window.__gallery[0].motion.playing() }; })()`);
+  check('motion pauses when scrolled away',
+    offscreen.onscreen === false && offscreen.paused === true,
+    `onscreen=${offscreen.onscreen} paused=${offscreen.paused}, ${offscreen.count} others playing`);
 
+  // Worth a real test now that there are several motion tiles: park the viewport where
+  // as many as possible are visible at once and confirm the cap still holds.
+  const capProbe = await s.ev(`(async () => {
+    const vids = [...document.querySelectorAll('video[data-playback]')]
+      .filter(v => !v.closest('[data-tile-repeat]'));
+    const tops = vids.map(v => v.closest('[data-tile-id]').offsetTop).sort((a,b) => a-b);
+    // Densest cluster: the window position covering the most motion tiles.
+    let best = 0, bestAt = 0;
+    for (const t of tops) {
+      const n = tops.filter(x => x >= t && x < t + innerHeight).length;
+      if (n > best) { best = n; bestAt = t; }
+    }
+    scrollTo(0, bestAt);
+    await new Promise(r => setTimeout(r, 1600));
+    return { motionTiles: vids.length, clustered: best, playing: window.__gallery[0].motion.playing() };
+  })()`, true);
   check('never exceeds maxConcurrentMotion',
-    onscreen.count <= motion.cap && offscreen.count <= motion.cap,
-    `cap ${motion.cap}, observed max ${Math.max(onscreen.count, offscreen.count)}`);
+    onscreen.count <= motion.cap && offscreen.count <= motion.cap && capProbe.playing <= motion.cap,
+    `cap ${motion.cap}; ${capProbe.motionTiles} motion tiles, ${capProbe.clustered} in one viewport, ${capProbe.playing} played`);
 
   // ======================= REDUCED MOTION =======================
   console.log('\n=== PREFERS-REDUCED-MOTION ===\n');
