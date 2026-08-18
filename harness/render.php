@@ -95,6 +95,9 @@ function render_harness(string $fixturePath, bool $withSiblings = false, array $
 
     $audit = new MediaAudit();
     $audit->inspect($row['tiles']);
+    // Surfaces media sitting in images/ that no tile references — the folder is not
+    // scanned, so without this the files simply never appear and nothing says why.
+    $audit->inspectUnreferenced(PROJECT_ROOT . '/images', $row['tiles']);
 
     $twig = harness_twig($imagerx);
 

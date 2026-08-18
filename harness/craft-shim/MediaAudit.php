@@ -35,6 +35,9 @@ final class MediaAudit
     /** @var array<string, bool> */
     private array $alpha = [];
 
+    /** @var string[] Files present in the source directory but referenced by no tile. */
+    private array $unreferenced = [];
+
     /**
      * Walks every tile's media and records anything that needs a human decision.
      *
@@ -55,6 +58,62 @@ final class MediaAudit
 
             $this->inspectAsset($still, (string) $tile['size']);
         }
+    }
+
+    /**
+     * Reports source files that no tile references.
+     *
+     * The fixture is the source of truth, not the folder: nothing scans images/, because
+     * contentType, alt text, size and destination cannot be derived from a filename. That
+     * is correct — and it also means dropping files into images/ appears to do nothing,
+     * which is genuinely confusing the first time. So the gap is reported rather than
+     * left silent.
+     *
+     * @param string $sourceDir Absolute path to the source media directory.
+     * @param array  $tiles     Hydrated tiles from FixtureLoader::load().
+     */
+    public function inspectUnreferenced(string $sourceDir, array $tiles): void
+    {
+        $referenced = [];
+        foreach ($tiles as $tile) {
+            foreach (['media', 'poster'] as $field) {
+                $asset = $tile[$field] ?? null;
+                if ($asset instanceof HarnessAsset || $asset instanceof HarnessVideo) {
+                    $referenced[basename($asset->getPath())] = true;
+                }
+            }
+            foreach (['media', 'image'] as $field) {
+                $asset = $tile['text'][$field] ?? null;
+                if ($asset instanceof HarnessAsset || $asset instanceof HarnessVideo) {
+                    $referenced[basename($asset->getPath())] = true;
+                }
+            }
+        }
+
+        $present = glob($sourceDir . '/*.{jpg,jpeg,png,webp,avif,mp4,mov,m4v}', GLOB_BRACE) ?: [];
+        foreach ($present as $path) {
+            $name = basename($path);
+            if (isset($referenced[$name])) {
+                continue;
+            }
+            // A video whose prepared loop IS referenced is not orphaned — the tile points
+            // at the derivative in dist/media, which is the intended arrangement.
+            if (preg_match('/\.(mp4|mov|m4v)$/i', $name)) {
+                $slug = strtolower((string) preg_replace('/[^a-z0-9]+/i', '-', pathinfo($name, PATHINFO_FILENAME)));
+                $slug = trim($slug, '-');
+                if (isset($referenced["{$slug}-loop.mp4"])) {
+                    continue;
+                }
+            }
+            $this->unreferenced[] = $name;
+        }
+        sort($this->unreferenced);
+    }
+
+    /** @return string[] */
+    public function unreferenced(): array
+    {
+        return $this->unreferenced;
     }
 
     /** @return array<string, array{edge:int, needed:int, size:string}> */
@@ -85,7 +144,7 @@ final class MediaAudit
     /** True when nothing needs attention. */
     public function isClean(): bool
     {
-        return $this->undersized === [] && $this->mismatched === [];
+        return $this->undersized === [] && $this->mismatched === [] && $this->unreferenced === [];
     }
 
     /** Records the three conditions worth reporting for one asset. */
@@ -133,6 +192,16 @@ final class MediaAudit
             $lines[] = 'EXTENSION MISMATCH — real format differs from the filename:';
             foreach ($this->mismatched() as $name => $format) {
                 $lines[] = sprintf('  %-56s is actually %s', $name, $format);
+            }
+        }
+
+        if ($this->unreferenced !== []) {
+            $n = count($this->unreferenced);
+            $lines[] = "NOT IN THE GALLERY — {$n} file(s) in images/ that no tile references.";
+            $lines[] = '  The fixture lists the tiles; the folder is not scanned. Add an entry to';
+            $lines[] = '  data/gallery.fixture.json for each of these, or they will not appear:';
+            foreach ($this->unreferenced as $name) {
+                $lines[] = "    {$name}";
             }
         }
 

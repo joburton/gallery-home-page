@@ -83,9 +83,11 @@ const check = (label, ok, detail = '') => {
 
   check('canvas reaches requested depth', canvas.depthScreens >= canvas.requestedDepth,
     `${canvas.depthScreens} screens vs ${canvas.requestedDepth} requested`);
-  // Count comes from the fixture, not a literal: hardcoding it meant adding a tile
-  // broke the test rather than being checked by it.
-  const EXPECTED_TILES = 33;
+  // Read the count from the fixture itself rather than hardcoding it. A literal here
+  // meant that adding tiles broke this test instead of being checked by it — twice.
+  const EXPECTED_TILES = JSON.parse(
+    require('fs').readFileSync(require('path').join(__dirname, '../../data/gallery.fixture.json'), 'utf8'),
+  ).row.tiles.length;
   check(`unique tiles still exactly ${EXPECTED_TILES}`, canvas.unique === EXPECTED_TILES, `${canvas.unique}`);
   check('padding is clones, not server HTML', canvas.clones > 0, `${canvas.clones} clones added`);
   check('no clone carries data-tile-id', canvas.cloneWithTileId === 0);

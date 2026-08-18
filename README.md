@@ -31,6 +31,37 @@ Then open <http://localhost:8080>. That is the single documented command; it ins
 | `bin/preview --with-siblings` | Add placeholder blocks above and below the row. **Nothing about the gallery should change** — this is the row-independence check |
 | `bin/preview --build-only` | Build the stylesheet and exit |
 
+## Adding images and videos
+
+**Dropping files into `images/` does not put them in the gallery.** The gallery renders
+`data/gallery.fixture.json`, and nothing scans the folder.
+
+That is deliberate, not an oversight: a filename cannot tell you a tile's `contentType`,
+its alt text, its size, where it links, or whether it is static or dynamic. It mirrors
+Craft exactly — uploading an asset to the library does not place it in a row; you add a
+tile that points at it.
+
+So adding media is two steps:
+
+```bash
+bin/prepare-media          # only needed if you added videos
+# then add an entry per file to data/gallery.fixture.json
+```
+
+Every preview and every `bin/verify` run now reports anything in `images/` that no tile
+references, so this cannot fail silently:
+
+```
+NOT IN THE GALLERY — 3 file(s) in images/ that no tile references.
+  The fixture lists the tiles; the folder is not scanned. Add an entry to
+  data/gallery.fixture.json for each of these, or they will not appear:
+    some-new-photo.jpg
+```
+
+`bin/prepare-media` handles **every** video in `images/`, not a named one: it centre-crops
+to square, strips audio, scales to 768px, and extracts a poster. It skips clips already
+prepared unless you pass `--force`.
+
 ### Driving the prototype from the URL
 
 Harness-only overrides, so the fixture doesn't need editing between reloads. **None of these ship** — in production every one comes from Craft, and there is no visitor-facing control for any of them.
@@ -157,8 +188,8 @@ inside the first viewport, because that figure is reproducible:
 
 | Profile | First-viewport budget | Tiles in fold | Browser also prefetched |
 |---------|----------------------|---------------|-------------------------|
-| Mobile 390×844 | **141.8 KB** (identical across 3 runs) | 4 tiles, 3 images | all 31 unique images → ~490 KB |
-| Desktop 1440×900 | **204.2 KB** | 25 tiles, 24 images | all 31 unique images → 261 KB |
+| Mobile 390×844 | **141.8 KB** | 4 tiles, 3 images | see the depth table below |
+| Desktop 1440×900 | **204.2 KB** | 25 tiles, 24 images | see the depth table below |
 
 Fixed cost: document 25.9 KB, CSS 19.5 KB, JS 23.0 KB across 4 modules.
 
@@ -173,15 +204,16 @@ media:
 
 | `minCanvasDepth` | Tiles in grid | Canvas | Images fetched | Image bytes |
 |---|---|---|---|---|
-| 2 | 33 | 8.2 screens | 12 | 196,128 |
-| 10 | 41 | 10.2 screens | 12 | 196,128 |
-| 15 | 60 | 15.0 screens | 29 | 482,054 |
-| 25 | **105** | 25.3 screens | **32** | **516,292** |
+| 2 | 51 | 12.5 screens | 17 | 238,392 |
+| 10 | 51 | 12.5 screens | 17 | 238,392 |
+| 15 | 63 | 15.0 screens | 20 | 279,244 |
+| 25 | **105** | 25.3 screens | **49** | **871,164** |
 
-At depth 25 the grid holds 105 tiles and fetches 32 images — the row's entire unique media
-set, logo included. The 73 padding clones cost nothing. The ceiling is the number of
-distinct assets in Craft and it does not move however deep the canvas is set, which is why
-windowing turned out to be unnecessary.
+Measured at 50 tiles. At depth 25 the grid holds 105 tiles and fetches 49 images — the
+row's entire unique media set. The 55 padding clones cost nothing. The ceiling is the
+number of distinct assets, and it does not move however deep the canvas is set, which is
+why windowing turned out to be unnecessary. Note the ceiling *does* rise as you add tiles,
+so it is worth re-measuring once the library grows past a hundred or so.
 
 Grid, measured in Chrome: exactly 2 columns at 320px at **every** gutter value from
 0–64px; column count reflows 2→3→5→7→9 with no breakpoint jump and no horizontal
@@ -301,6 +333,21 @@ Two knock-on effects worth knowing:
   another lever.
 - **It widens the tab-order divergence** you accepted above, since that grows with the
   number of large tiles. Still document order, still every tile keyboard-reachable.
+
+### Abstract tiles have nowhere to link
+
+The 17 assets added on 6 Aug are abstract texture and motion — sand, storm cloud, rusted
+hinge, an oscilloscope — the abstract imagery the brief schedules for Phase 2. They are
+not products, so the existing `contentType` vocabulary had nothing for them.
+
+A new `abstract` type was added, mapped to the About page as an intent, but every one ships
+`live: false` — non-interactive, rendering as a plain image with no dead link. **Nothing
+here invented a destination.** Tell me where abstract tiles should point (About? a brand
+or process page? nowhere at all?) and it is a one-line change per tile in Craft.
+
+One asset needs a look: `7946014-uhd_1440_2732-30fps` is dark drapery throughout, mean
+luma 20, so its tile reads as almost black. The build flags it on every run. It is
+representative of the clip rather than a bad poster frame — the clip itself is that dark.
 
 ### Still open
 

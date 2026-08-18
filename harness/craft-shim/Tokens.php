@@ -42,6 +42,11 @@ final class Tokens
         'sketch' => 'product',
         'swatch' => 'swatches',
         'factory' => 'about',
+        // Texture and atmosphere rather than a product — the abstract imagery the brief
+        // schedules for Phase 2. There is no product page for a rippled sand dune, so
+        // these carry an intent ('about') but ship with live: false until someone decides
+        // where abstract tiles should point. See README.
+        'abstract' => 'about',
     ];
 
     /** Text-tile background tokens, drawn from the brand palette. */

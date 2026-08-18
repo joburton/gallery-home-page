@@ -693,8 +693,8 @@
       {
         "id": "tile-031",
         "type": "motion",
-        "media": "/dist/media/factory-cutting-machine-loop.mp4",
-        "poster": "/dist/media/factory-cutting-machine-poster.jpg",
+        "media": "/dist/media/factory-sound-cutting-machine-loop.mp4",
+        "poster": "/dist/media/factory-sound-cutting-machine-poster.jpg",
         "alt": "A cutting machine trimming acoustic panel material on the Sabin factory floor",
         "subject": "the Sabin factory",
         "size": "1x1",
@@ -709,6 +709,373 @@
           "type": "about",
           "url": "/about",
           "live": true
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-033",
+        "type": "image",
+        "media": "/images/pexels-ali-gabr-145489869-16015743.jpg",
+        "alt": "Soft blurred forms in deep red, like a photograph lit through red glass",
+        "subject": "red study",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "red",
+          "texture"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-034",
+        "type": "image",
+        "media": "/images/pexels-ana-hidalgo-burgos-burgos-4848204-33187986.jpg",
+        "alt": "A bright yellow staircase rising in sharp diagonal steps",
+        "subject": "yellow staircase",
+        "size": "2x2",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "yellow",
+          "architecture"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-035",
+        "type": "image",
+        "media": "/images/pexels-c-2180548-33634506.jpg",
+        "alt": "Ochre paint cracked and peeling away from a plaster wall",
+        "subject": "peeling ochre paint",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "texture",
+          "ochre"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-036",
+        "type": "image",
+        "media": "/images/pexels-cottonbro-7858258.jpg",
+        "alt": "A vintage oscilloscope showing a bright trace across a green grid",
+        "subject": "oscilloscope",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "instrument",
+          "green"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-037",
+        "type": "image",
+        "media": "/images/pexels-errolflanagan-717688.jpg",
+        "alt": "A single pink-lit cloud against a deep blue sky",
+        "subject": "pink cloud",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "sky",
+          "pink"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-038",
+        "type": "image",
+        "media": "/images/pexels-eviphotography-11288849.jpg",
+        "alt": "Close-up of ripening barley ears in soft focus",
+        "subject": "barley",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "field",
+          "warm"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-039",
+        "type": "image",
+        "media": "/images/pexels-fotios-photos-11790304.jpg",
+        "alt": "A white daisy on deep blue, rendered like a cyanotype print",
+        "subject": "daisy cyanotype",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "blue",
+          "botanical"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-040",
+        "type": "image",
+        "media": "/images/pexels-ganajp-4064361.jpg",
+        "alt": "Wind-rippled desert sand in parallel ridges",
+        "subject": "rippled sand",
+        "size": "2x2",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "sand",
+          "pattern"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-041",
+        "type": "image",
+        "media": "/images/pexels-lyn-ong-2836069-12993605.jpg",
+        "alt": "Blue and white marbling swirled into feathered bands",
+        "subject": "blue marbling",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "blue",
+          "pattern"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-042",
+        "type": "image",
+        "media": "/images/pexels-mrborys-7985760.jpg",
+        "alt": "A rusted hinge on a weathered steel door",
+        "subject": "rusted hinge",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "rust",
+          "metal"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-043",
+        "type": "image",
+        "media": "/images/pexels-rdne-8197368.jpg",
+        "alt": "Rows of knobs and buttons across an audio mixing desk",
+        "subject": "mixing desk",
+        "size": "2x2",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "audio",
+          "detail"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-044",
+        "type": "image",
+        "media": "/images/pexels-tima-miroshnichenko-7205366.jpg",
+        "alt": "A photographic print developing in a tray under red darkroom light",
+        "subject": "darkroom tray",
+        "size": "1x1",
+        "contentType": "abstract",
+        "tags": [
+          "abstract",
+          "red",
+          "process"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-045",
+        "type": "motion",
+        "media": "/dist/media/14200834-uhd-3840-2160-30fps-loop.mp4",
+        "poster": "/dist/media/14200834-uhd-3840-2160-30fps-poster.jpg",
+        "alt": "A shoal of small fish drifting through turquoise water",
+        "subject": "shoal in turquoise water",
+        "size": "2x2",
+        "contentType": "abstract",
+        "playback": "autoplay",
+        "tags": [
+          "abstract",
+          "water",
+          "motion"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-046",
+        "type": "motion",
+        "media": "/dist/media/14252720-2560-1440-30fps-loop.mp4",
+        "poster": "/dist/media/14252720-2560-1440-30fps-poster.jpg",
+        "alt": "Grey storm clouds building and rolling across the sky",
+        "subject": "storm clouds",
+        "size": "1x1",
+        "contentType": "abstract",
+        "playback": "autoplay",
+        "tags": [
+          "abstract",
+          "sky",
+          "monochrome"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-047",
+        "type": "motion",
+        "media": "/dist/media/15283209-hd-1080-1920-30fps-loop.mp4",
+        "poster": "/dist/media/15283209-hd-1080-1920-30fps-poster.jpg",
+        "alt": "Magenta liquid rippling outward in slow waves",
+        "subject": "magenta ripples",
+        "size": "1x1",
+        "contentType": "abstract",
+        "playback": "autoplay",
+        "tags": [
+          "abstract",
+          "magenta",
+          "liquid"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-048",
+        "type": "motion",
+        "media": "/dist/media/3987705-hd-1920-1080-24fps-loop.mp4",
+        "poster": "/dist/media/3987705-hd-1920-1080-24fps-poster.jpg",
+        "alt": "Long green grass moving in the wind",
+        "subject": "grass in wind",
+        "size": "1x1",
+        "contentType": "abstract",
+        "playback": "autoplay",
+        "tags": [
+          "abstract",
+          "green",
+          "motion"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
+        },
+        "buildLink": null,
+        "designation": "dynamic"
+      },
+      {
+        "id": "tile-049",
+        "type": "motion",
+        "media": "/dist/media/7946014-uhd-1440-2732-30fps-loop.mp4",
+        "poster": "/dist/media/7946014-uhd-1440-2732-30fps-poster.jpg",
+        "alt": "Dark fabric shifting in deep folds, almost black",
+        "subject": "dark drapery",
+        "size": "1x1",
+        "contentType": "abstract",
+        "playback": "autoplay",
+        "tags": [
+          "abstract",
+          "dark",
+          "fabric"
+        ],
+        "destination": {
+          "type": "about",
+          "url": "/about",
+          "live": false
         },
         "buildLink": null,
         "designation": "dynamic"

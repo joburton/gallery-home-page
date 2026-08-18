@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SABIN — Absorption Dial (gallery widget)</title>
+
+<!-- ============================================================= -->
+<!-- HARNESS ONLY — delete this block when embedding as a tile.    -->
+<!-- Nothing below it styles anything outside .sbn-nrc.            -->
+<!-- ============================================================= -->
+<style>
+  @font-face{
+    font-family:'Neue Montreal';
+    src:url('../fonts/NeueMontreal-Medium.woff2') format('woff2'),
+        url('../fonts/NeueMontreal-Medium.woff') format('woff');
+    font-weight:500; font-style:normal; font-display:swap;
+  }
+  html,body{margin:0;height:100%;}
+  body{
+    background:#E5E4DC;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    font-family:'Neue Montreal',Helvetica,Arial,sans-serif;
+  }
+  .harness-tile{ width:min(86vh,86vw,720px); }
+</style>
+
+<!-- ============================================================= -->
+<!-- WIDGET — everything is scoped under .sbn-nrc                   -->
+<!-- No element outside the widget root is styled.                  -->
+<!-- ============================================================= -->
+<style>
+.sbn-nrc{
+  /* Brand tokens. The two chassis shades are the only derived values:
+     both are darkenings of Dark Gray 303030, used for panel depth. */
+  --sbn-orange:      #F15C24;
+  --sbn-yellow:      #FFC15E;
+  --sbn-dark:        #303030;
+  --sbn-white:       #FFFFFF;
+  --sbn-light-gray:  #E5E4DC;
+  --sbn-off-white:   #F4F4F4;
+  --sbn-chassis:     #1F1F1F;  /* derived from --sbn-dark */
+  --sbn-inset:       #131313;  /* derived from --sbn-dark */
+
+  --sbn-key:         #2A2A2A;
+  --sbn-key-edge:    #161616;
+  --sbn-dim:         #7C7A76;
+
+  /* Everything scales from the container's own width, so the widget
+     is resolution-independent inside any square tile. */
+  container-type: inline-size;
+
+  position:relative;
+  aspect-ratio:1/1;
+  width:100%;
+  border-radius:4.2cqi;
+  padding:2.6cqi;
+  background:linear-gradient(160deg,#343434,#1C1C1C 68%);
+  box-shadow:
+    0 6cqi 12cqi -4cqi rgba(0,0,0,.45),
+    inset 0 .3cqi 0 rgba(255,255,255,.05),
+    inset 0 -.5cqi 1.6cqi rgba(0,0,0,.5);
+  font-family:'Neue Montreal',Helvetica,Arial,sans-serif;
+  color:var(--sbn-off-white);
+  -webkit-font-smoothing:antialiased;
+}
+.sbn-nrc *{ box-sizing:border-box; }
+
+.sbn-nrc__panel{
+  height:100%;
+  display:grid;
+  grid-template-rows:auto auto auto 1fr auto;
+  gap:1.5cqi;
+  background:var(--sbn-chassis);
+  border:.22cqi solid var(--sbn-key-edge);
+  border-radius:3cqi;
+  padding:2cqi;
+}
+
+/* ---------------- header ---------------- */
+.sbn-nrc__head{
+  display:flex; align-items:center; gap:1.6cqi;
+  padding:0 .4cqi .4cqi;
+}
+.sbn-nrc__dot{
+  width:2.2cqi; height:2.2cqi; border-radius:50%;
+  background:var(--sbn-orange);
+  box-shadow:0 0 2cqi rgba(241,92,36,.65);
+  flex:none;
+}
+.sbn-nrc__word{
+  font-size:3.1cqi; letter-spacing:.28cqi; line-height:1;
+}
+.sbn-nrc__sub{
+  display:block; margin-top:.5cqi;
+  font-size:1.55cqi; letter-spacing:.42cqi; color:var(--sbn-dim);
+}
+.sbn-nrc__badge{
+  margin-left:auto;
+  font-size:1.5cqi; letter-spacing:.42cqi; color:var(--sbn-dim);
+  text-align:right; line-height:1.5;
+}
+
+/* ---------------- screen ---------------- */
+.sbn-nrc__screen{
+  background:var(--sbn-inset);
+  border-radius:1.8cqi;
+  border:.22cqi solid #0A0A0A;
+  padding:1.8cqi 2cqi 1.4cqi;
+  display:grid; gap:1.2cqi;
+}
+.sbn-nrc__readline{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:1.6cqi; letter-spacing:.4cqi; color:var(--sbn-dim);
+}
+.sbn-nrc__readline b{ color:var(--sbn-yellow); font-weight:500; }
+.sbn-nrc__canvas{ width:100%; height:13cqi; display:block; }
+
+.sbn-nrc__figures{
+  display:flex; align-items:flex-end; gap:4cqi;
+  border-top:.22cqi solid #262626; padding-top:1.3cqi;
+}
+.sbn-nrc__fig{ line-height:1; }
+.sbn-nrc__num{
+  font-size:6.6cqi; letter-spacing:-.1cqi;
+  font-variant-numeric:tabular-nums;
+  color:var(--sbn-white);
+}
+.sbn-nrc__fig--muted .sbn-nrc__num{ color:var(--sbn-dim); }
+.sbn-nrc__unit{
+  display:block; margin-top:.9cqi;
+  font-size:1.5cqi; letter-spacing:.45cqi; color:var(--sbn-dim);
+}
+
+/* ---------------- absorption ramp ---------------- */
+.sbn-nrc__ramp{
+  display:grid; grid-template-columns:repeat(16,1fr); gap:.55cqi;
+}
+.sbn-nrc__ramp i{
+  height:3.4cqi; border-radius:.7cqi;
+  background:var(--sbn-key);
+  box-shadow:inset 0 .18cqi 0 rgba(255,255,255,.05);
+  transition:background .18s ease;
+}
+.sbn-nrc__ramp i.is-lit{ background:var(--step); }
+
+/* ---------------- dial ---------------- */
+.sbn-nrc__stage{
+  display:flex; align-items:center; justify-content:center;
+  min-height:0;
+}
+.sbn-nrc__dial{
+  position:relative;
+  width:34cqi; height:34cqi;
+  touch-action:none;
+}
+.sbn-nrc__ticks{ position:absolute; inset:0; }
+.sbn-nrc__ticks i{
+  position:absolute; left:50%; top:0;
+  width:.5cqi; height:2.1cqi; margin-left:-.25cqi;
+  background:#4A4744; border-radius:.25cqi;
+  transform-origin:50% 17cqi;
+}
+.sbn-nrc__ticks i.is-lit{ background:var(--sbn-orange); }
+.sbn-nrc__knob{
+  position:absolute; inset:4.4cqi;
+  border-radius:50%;
+  background:radial-gradient(circle at 34% 26%,#5A5754,#232221 68%);
+  box-shadow:
+    0 1.6cqi 3cqi rgba(0,0,0,.55),
+    0 0 0 1.1cqi #0D0D0D,
+    inset 0 .4cqi .6cqi rgba(255,255,255,.09),
+    inset 0 -1.2cqi 2cqi rgba(0,0,0,.5);
+  cursor:grab;
+}
+.sbn-nrc__knob:active{ cursor:grabbing; }
+.sbn-nrc__knob:focus-visible{
+  outline:.5cqi solid var(--sbn-orange); outline-offset:.9cqi;
+}
+.sbn-nrc__pointer{
+  position:absolute; left:50%; top:9%;
+  width:.95cqi; height:30%; margin-left:-.475cqi;
+  border-radius:.5cqi;
+  background:var(--sbn-orange);
+  box-shadow:0 0 1.6cqi rgba(241,92,36,.7);
+  transform-origin:50% 152%;
+}
+.sbn-nrc__caption{
+  position:absolute; left:0; right:0; bottom:-.4cqi;
+  text-align:center;
+  font-size:1.5cqi; letter-spacing:.42cqi; color:var(--sbn-dim);
+}
+
+/* ---------------- key rows ---------------- */
+.sbn-nrc__keys{ display:grid; grid-template-columns:repeat(4,1fr); gap:.9cqi; }
+.sbn-nrc__key{
+  appearance:none; border:none; cursor:pointer;
+  background:var(--sbn-key);
+  border-radius:1.3cqi;
+  padding:1.4cqi .6cqi 1.1cqi;
+  display:grid; justify-items:center; gap:.9cqi;
+  color:var(--sbn-dim);
+  font-family:inherit; font-size:1.35cqi; letter-spacing:.3cqi;
+  box-shadow:inset 0 .2cqi 0 rgba(255,255,255,.05), 0 .4cqi .8cqi rgba(0,0,0,.35);
+  transition:color .15s ease, box-shadow .15s ease;
+}
+.sbn-nrc__key svg{ width:4.4cqi; height:4.4cqi; stroke:currentColor; fill:none;
+  stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.sbn-nrc__key.is-on{
+  color:var(--sbn-orange);
+  box-shadow:inset 0 0 0 .3cqi var(--sbn-orange), 0 .4cqi .8cqi rgba(0,0,0,.35);
+}
+.sbn-nrc__bar{ display:grid; grid-template-columns:1fr 1fr; gap:.9cqi; }
+.sbn-nrc__bar .sbn-nrc__key{
+  grid-template-columns:auto auto; justify-content:center; align-items:center;
+  gap:1.2cqi; padding:1.5cqi 1cqi;
+}
+.sbn-nrc__led{
+  width:1.5cqi; height:1.5cqi; border-radius:50%;
+  background:#3D3A38; flex:none;
+}
+.sbn-nrc__key.is-on .sbn-nrc__led{
+  background:var(--sbn-orange); box-shadow:0 0 1.4cqi rgba(241,92,36,.8);
+}
+
+/* ---------------- info ---------------- */
+.sbn-nrc__info{
+  position:absolute; inset:2.6cqi;
+  background:rgba(15,15,15,.97);
+  border-radius:3cqi;
+  padding:5cqi;
+  display:grid; align-content:center; gap:2.4cqi;
+  opacity:0; visibility:hidden;
+  transition:opacity .25s ease, visibility .25s ease;
+  overflow:auto;
+}
+.sbn-nrc__info[data-open="true"]{ opacity:1; visibility:visible; }
+.sbn-nrc__info h3{
+  margin:0 0 .9cqi; font-size:2.4cqi; font-weight:500;
+  letter-spacing:.2cqi; color:var(--sbn-yellow);
+}
+.sbn-nrc__info p{
+  margin:0; font-size:1.95cqi; line-height:1.65; color:#B9B4AC;
+}
+.sbn-nrc__formula{
+  margin-top:1.4cqi; padding:1.4cqi 1.8cqi;
+  background:var(--sbn-inset); border-radius:1.2cqi;
+  font-size:1.7cqi; letter-spacing:.2cqi; color:var(--sbn-dim);
+}
+.sbn-nrc__close{
+  position:absolute; top:3cqi; right:3.4cqi;
+  appearance:none; background:none; border:none; cursor:pointer;
+  color:var(--sbn-dim); font-family:inherit;
+  font-size:1.6cqi; letter-spacing:.42cqi;
+}
+.sbn-nrc__close:focus-visible{ outline:.4cqi solid var(--sbn-orange); outline-offset:.6cqi; }
+
+/* Reduced motion: no transitions anywhere. The canvas loop is stopped
+   in JavaScript as well — CSS alone cannot reach a rAF loop. */
+@media (prefers-reduced-motion: reduce){
+  .sbn-nrc *,
+  .sbn-nrc *::before,
+  .sbn-nrc *::after{ transition:none !important; animation:none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="harness-tile"><!-- harness only -->
+
+<div class="sbn-nrc" id="sbnNrc">
+  <div class="sbn-nrc__panel">
+
+    <div class="sbn-nrc__head">
+      <span class="sbn-nrc__dot" aria-hidden="true"></span>
+      <span>
+        <span class="sbn-nrc__word">SABIN</span>
+        <span class="sbn-nrc__sub">ROOM ACOUSTICS</span>
+      </span>
+      <span class="sbn-nrc__badge">ABSORPTION<br>DEMO</span>
+    </div>
+
+    <div class="sbn-nrc__screen">
+      <div class="sbn-nrc__readline">
+        <span>ROOM MURMUR</span>
+        <b id="sbnLoud">LOUD</b>
+      </div>
+      <canvas class="sbn-nrc__canvas" id="sbnCanvas" width="720" height="180" aria-hidden="true"></canvas>
+      <div class="sbn-nrc__figures">
+        <span class="sbn-nrc__fig">
+          <span class="sbn-nrc__num" id="sbnNrcVal">0.10</span>
+          <span class="sbn-nrc__unit">NRC</span>
+        </span>
+        <span class="sbn-nrc__fig sbn-nrc__fig--muted">
+          <span class="sbn-nrc__num" id="sbnSabinVal">30</span>
+          <span class="sbn-nrc__unit">SABINS</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="sbn-nrc__ramp" id="sbnRamp" aria-hidden="true"></div>
+
+    <div class="sbn-nrc__stage">
+      <div class="sbn-nrc__dial">
+        <div class="sbn-nrc__ticks" id="sbnTicks" aria-hidden="true"></div>
+        <div class="sbn-nrc__knob" id="sbnKnob"
+             role="slider" tabindex="0"
+             aria-label="Absorption"
+             aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.1"
+             aria-valuetext="NRC 0.10, 30 sabins">
+          <span class="sbn-nrc__pointer" id="sbnPointer"></span>
+        </div>
+        <span class="sbn-nrc__caption">DRAG TO ADD ABSORPTION · <span id="sbnPct">10%</span></span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sbn-nrc__keys" id="sbnMaterials">
+        <button class="sbn-nrc__key" type="button" data-nrc="0.05">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 12h16M12 4v16"/></svg>
+          <span>BARE WALL</span>
+        </button>
+        <button class="sbn-nrc__key" type="button" data-nrc="0.30">
+          <svg viewBox="0 0 24 24"><path d="M3 8c3-2 5 2 8 0s5-2 8 0M3 13c3-2 5 2 8 0s5-2 8 0M3 18c3-2 5 2 8 0s5-2 8 0"/></svg>
+          <span>CARPET</span>
+        </button>
+        <button class="sbn-nrc__key" type="button" data-nrc="0.60">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+          <span>ACOUSTIC TILE</span>
+        </button>
+        <button class="sbn-nrc__key" type="button" data-nrc="0.85">
+          <svg viewBox="0 0 24 24"><path d="M4 3v18M8 3v18M12 3v18M16 3v18M20 3v18"/><path d="M2 3h20"/></svg>
+          <span>PANELS + DRAPE</span>
+        </button>
+      </div>
+
+      <div class="sbn-nrc__bar" style="margin-top:.9cqi">
+        <button class="sbn-nrc__key" type="button" id="sbnSound">
+          <span class="sbn-nrc__led" aria-hidden="true"></span><span>PLAY MURMUR</span>
+        </button>
+        <button class="sbn-nrc__key" type="button" id="sbnInfo" aria-expanded="false" aria-controls="sbnInfoPanel">
+          <span class="sbn-nrc__led" aria-hidden="true"></span><span>WHAT'S THIS?</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Real content, present in the served HTML. This is what makes the
+       tile meaningful to a crawler and to anyone without JavaScript. -->
+  <div class="sbn-nrc__info" id="sbnInfoPanel" data-open="false">
+    <button class="sbn-nrc__close" type="button" id="sbnClose">CLOSE ×</button>
+    <div>
+      <h3>NRC — Noise Reduction Coefficient</h3>
+      <p>A single number from 0 to 1 rating how much sound a material absorbs on average across four mid-range frequencies. 0 reflects almost everything; 1 absorbs almost everything. It is a simplification, but it is the number on every acoustic panel's spec sheet.</p>
+    </div>
+    <div>
+      <h3>The Sabin</h3>
+      <p>Named after Wallace Clement Sabine, who founded architectural acoustics. One sabin is the absorption of one square foot of perfectly absorptive surface. Multiply a material's NRC by its area for its total absorption.</p>
+      <p class="sbn-nrc__formula">SABINS = NRC × AREA (ft²) — this demo assumes 300 ft².</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /harness -->
+
+<script>
+(function(){
+  "use strict";
+
+  var AREA = 300, SWEEP = 270, MIN_A = -135;
+  var root      = document.getElementById('sbnNrc');
+  var knob      = document.getElementById('sbnKnob');
+  var pointer   = document.getElementById('sbnPointer');
+  var ticksEl   = document.getElementById('sbnTicks');
+  var rampEl    = document.getElementById('sbnRamp');
+  var nrcOut    = document.getElementById('sbnNrcVal');
+  var sabinOut  = document.getElementById('sbnSabinVal');
+  var pctOut    = document.getElementById('sbnPct');
+  var loudOut   = document.getElementById('sbnLoud');
+  var canvas    = document.getElementById('sbnCanvas');
+  var ctx       = canvas.getContext('2d');
+  var infoBtn   = document.getElementById('sbnInfo');
+  var infoPanel = document.getElementById('sbnInfoPanel');
+  var closeBtn  = document.getElementById('sbnClose');
+  var soundBtn  = document.getElementById('sbnSound');
+  var matBtns   = Array.prototype.slice.call(
+                    document.querySelectorAll('#sbnMaterials .sbn-nrc__key'));
+
+  var value = 0.10;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var onscreen = true, rafId = null, phase = 0;
+
+  /* ---------- build ticks + ramp ---------- */
+  var TICKS = 25;
+  for (var i = 0; i < TICKS; i++){
+    var t = i / (TICKS - 1);
+    var el = document.createElement('i');
+    el.style.transform = 'rotate(' + (MIN_A + t * SWEEP) + 'deg)';
+    el.dataset.t = t;
+    ticksEl.appendChild(el);
+  }
+  var STEPS = 16;
+  for (var j = 0; j < STEPS; j++){
+    var s = document.createElement('i');
+    s.dataset.t = (j + 1) / STEPS;
+    /* dark -> light ramp, ending on the brand off-white */
+    var lum = 42 + (j / (STEPS - 1)) * 202;
+    s.style.setProperty('--step', 'rgb(' + lum + ',' + lum + ',' + (lum - 4) + ')');
+    rampEl.appendChild(s);
+  }
+  var tickEls = Array.prototype.slice.call(ticksEl.children);
+  var rampEls = Array.prototype.slice.call(rampEl.children);
+
+  /* ---------- render ---------- */
+  function render(){
+    var sabins = Math.round(value * AREA);
+    pointer.style.transform = 'rotate(' + (MIN_A + value * SWEEP) + 'deg)';
+    nrcOut.textContent   = value.toFixed(2);
+    sabinOut.textContent = sabins;
+    pctOut.textContent   = Math.round(value * 100) + '%';
+    loudOut.textContent  = value < 0.25 ? 'LOUD'
+                         : value < 0.55 ? 'MURMUR'
+                         : value < 0.80 ? 'HUSHED' : 'QUIET';
+
+    knob.setAttribute('aria-valuenow', value.toFixed(2));
+    knob.setAttribute('aria-valuetext', 'NRC ' + value.toFixed(2) + ', ' + sabins + ' sabins');
+
+    for (var i = 0; i < tickEls.length; i++){
+      tickEls[i].classList.toggle('is-lit', parseFloat(tickEls[i].dataset.t) <= value + 0.001);
+    }
+    for (var j = 0; j < rampEls.length; j++){
+      rampEls[j].classList.toggle('is-lit', parseFloat(rampEls[j].dataset.t) <= value + 0.001);
+    }
+    for (var k = 0; k < matBtns.length; k++){
+      matBtns[k].classList.toggle('is-on',
+        Math.abs(parseFloat(matBtns[k].dataset.nrc) - value) < 0.005);
+    }
+    updateAudio();
+    if (!animating()) drawFrame();   /* keep the still frame current */
+  }
+
+  function setValue(v){
+    value = Math.max(0, Math.min(1, v));
+    render();
+  }
+
+  /* ---------- natural angular drag ----------
+     The knob tracks the pointer around its own centre, using a relative
+     offset captured on pointerdown — so it never jumps to meet your finger,
+     and dragging left rotates it left. */
+  var dragging = false, startAngle = 0, startValue = 0;
+
+  function angleOf(e){
+    var r  = knob.getBoundingClientRect();
+    var dx = e.clientX - (r.left + r.width  / 2);
+    var dy = e.clientY - (r.top  + r.height / 2);
+    return Math.atan2(dx, -dy) * 180 / Math.PI;   /* 0 = up, + = clockwise */
+  }
+
+  knob.addEventListener('pointerdown', function(e){
+    dragging   = true;
+    startAngle = angleOf(e);
+    startValue = value;
+    knob.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  knob.addEventListener('pointermove', function(e){
+    if (!dragging) return;
+    var d = angleOf(e) - startAngle;
+    d = ((d + 540) % 360) - 180;                  /* shortest way round */
+    setValue(startValue + d / SWEEP);
+  });
+
+  function endDrag(e){
+    if (!dragging) return;
+    dragging = false;
+    if (knob.hasPointerCapture && knob.hasPointerCapture(e.pointerId)){
+      knob.releasePointerCapture(e.pointerId);
+    }
+  }
+  knob.addEventListener('pointerup', endDrag);
+  knob.addEventListener('pointercancel', endDrag);
+
+  knob.addEventListener('keydown', function(e){
+    var step = e.shiftKey ? 0.10 : 0.02, used = true;
+    switch (e.key){
+      case 'ArrowUp': case 'ArrowRight': setValue(value + step); break;
+      case 'ArrowDown': case 'ArrowLeft': setValue(value - step); break;
+      case 'Home': setValue(0); break;
+      case 'End':  setValue(1); break;
+      case 'PageUp':   setValue(value + 0.10); break;
+      case 'PageDown': setValue(value - 0.10); break;
+      default: used = false;
+    }
+    if (used) e.preventDefault();
+  });
+
+  matBtns.forEach(function(b){
+    b.addEventListener('click', function(){ setValue(parseFloat(b.dataset.nrc)); });
+  });
+
+  /* ---------- info ---------- */
+  function setInfo(open){
+    infoPanel.dataset.open = open ? 'true' : 'false';
+    infoBtn.classList.toggle('is-on', open);
+    infoBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) closeBtn.focus(); else infoBtn.focus();
+  }
+  infoBtn.addEventListener('click', function(){
+    setInfo(infoPanel.dataset.open !== 'true');
+  });
+  closeBtn.addEventListener('click', function(){ setInfo(false); });
+  root.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && infoPanel.dataset.open === 'true') setInfo(false);
+  });
+
+  /* ---------- audio ---------- */
+  var actx = null, src = null, filt = null, gain = null, playing = false;
+
+  function noiseBuffer(c){
+    var n = c.sampleRate * 2, buf = c.createBuffer(1, n, c.sampleRate);
+    var d = buf.getChannelData(0), b0 = 0, b1 = 0, b2 = 0;
+    for (var i = 0; i < n; i++){
+      var w = Math.random() * 2 - 1;
+      b0 = 0.99 * b0 + w * 0.15;
+      b1 = 0.97 * b1 + w * 0.10;
+      b2 = 0.95 * b2 + w * 0.05;
+      d[i] = (b0 + b1 + b2) * 0.6;
+    }
+    return buf;
+  }
+  function ensureAudio(){
+    if (actx) return;
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    src  = actx.createBufferSource();
+    src.buffer = noiseBuffer(actx); src.loop = true;
+    filt = actx.createBiquadFilter(); filt.type = 'lowpass'; filt.Q.value = 0.7;
+    gain = actx.createGain(); gain.gain.value = 0;
+    src.connect(filt); filt.connect(gain); gain.connect(actx.destination);
+    src.start();
+  }
+  function updateAudio(){
+    if (!actx || !playing) return;
+    var now = actx.currentTime;
+    filt.frequency.setTargetAtTime(5200 - value * 4600, now, 0.08);
+    gain.gain.setTargetAtTime(Math.max(0.004, 0.16 - value * 0.15), now, 0.08);
+  }
+  function stopAudio(){
+    if (!actx || !playing) return;
+    gain.gain.setTargetAtTime(0, actx.currentTime, 0.08);
+    playing = false;
+    soundBtn.classList.remove('is-on');
+    soundBtn.lastElementChild.textContent = 'PLAY MURMUR';
+  }
+  soundBtn.addEventListener('click', function(){
+    ensureAudio();
+    if (actx.state === 'suspended') actx.resume();
+    playing = !playing;
+    soundBtn.classList.toggle('is-on', playing);
+    soundBtn.lastElementChild.textContent = playing ? 'MUTE MURMUR' : 'PLAY MURMUR';
+    if (playing) updateAudio();
+    else gain.gain.setTargetAtTime(0, actx.currentTime, 0.08);
+  });
+
+  /* ---------- canvas ---------- */
+  var BARS = 44;
+  function drawFrame(){
+    var w = canvas.width, h = canvas.height, bw = w / BARS;
+    ctx.clearRect(0, 0, w, h);
+    for (var i = 0; i < BARS; i++){
+      var base = 0.14 + 0.86 * (1 - value);
+      var jit  = animating()
+               ? (Math.sin(phase * 0.11 + i * 0.6) * 0.5 + Math.sin(phase * 0.05 + i) * 0.3)
+               : 0;
+      var amp  = Math.min(1, Math.max(0.05, base + jit * (1 - value) * 0.5));
+      var bh   = amp * h * 0.92;
+      ctx.fillStyle = (i % 3 !== 0)
+        ? 'rgba(255,193,94,'  + (0.30 + 0.5  * (1 - value)) + ')'
+        : 'rgba(140,138,132,' + (0.22 + 0.34 * (1 - value)) + ')';
+      ctx.fillRect(i * bw + bw * 0.18, h - bh, bw * 0.64, bh);
+    }
+  }
+  function animating(){ return onscreen && !reduceMotion.matches; }
+  function loop(){
+    if (!animating()){ rafId = null; return; }
+    phase++; drawFrame();
+    rafId = requestAnimationFrame(loop);
+  }
+  function sync(){
+    if (animating()){ if (rafId === null) rafId = requestAnimationFrame(loop); }
+    else { if (rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } drawFrame(); }
+  }
+
+  /* Pause entirely when scrolled out of view — the same rule motion tiles
+     follow. Audio stops too, so a widget can never play from offscreen. */
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      onscreen = entries[0].isIntersecting;
+      if (!onscreen) stopAudio();
+      sync();
+    }, { threshold: 0.01 }).observe(root);
+  }
+  if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', sync);
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){ stopAudio(); onscreen = false; }
+    else onscreen = true;
+    sync();
+  });
+
+  render();
+  sync();
+})();
+</script>
+</body>
+</html>

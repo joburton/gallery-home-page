@@ -1,99 +1,223 @@
 #!/usr/bin/env bash
 #
-# prepare-media — one-off preparation of source media that isn't web-ready.
+# prepare-media — turn every video in images/ into a square, muted, web-weight loop.
 #
-# Source media in images/ is never modified or renamed: the filenames carry
-# provenance. Everything generated here is written to dist/media/, which is
-# disposable and gitignored, so re-running is always safe.
+# Source media in images/ is never modified or renamed: the filenames carry provenance.
+# Everything generated goes to dist/media/, which is disposable and gitignored, so
+# re-running is always safe.
 #
-# Currently this handles the supplied factory clip, which is 1920x1080 at 20Mbps
-# (~6MB for 2.4 seconds) — far too heavy for a tile, and the wrong shape. Tiles are
-# always square, so it is centre-cropped rather than letterboxed.
+# Why this exists: the supplied clips are 1.8-34 MB at up to 3840x2160. A tile is square
+# and about 2in across, so they are both the wrong shape and orders of magnitude too
+# heavy. Each is centre-cropped square rather than letterboxed, scaled, stripped of
+# audio, and given a poster extracted from its own first frame.
 #
-# Usage: bin/prepare-media [--force]
+# Usage:
+#   bin/prepare-media           prepare anything new or changed
+#   bin/prepare-media --force   redo everything
+#   bin/prepare-media --list    show what would be done, change nothing
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SRC="$ROOT/images/FACTORY-SOUND_CUTTING-MACHINE.mp4"
+SRC_DIR="$ROOT/images"
 OUT_DIR="$ROOT/dist/media"
-OUT_MP4="$OUT_DIR/factory-cutting-machine-loop.mp4"
-OUT_POSTER="$OUT_DIR/factory-cutting-machine-poster.jpg"
 
-# Square edge for the transcoded loop. 768px covers a 2x2 tile at 2x device pixel
-# ratio (a 2in cell is 192 CSS px), so the clip stays sharp even if a Craft admin
-# resizes the tile later.
+# Square edge for every loop. 768px covers a 2x2 tile at 2x device pixel ratio (a 2in
+# cell is 192 CSS px), so a clip stays sharp even if a Craft admin resizes its tile.
 EDGE=768
+CRF=30
 
 FORCE=0
-[[ "${1:-}" == "--force" ]] && FORCE=1
-
-for tool in ffmpeg ffprobe; do
-  if ! command -v "$tool" >/dev/null 2>&1; then
-    echo "error: $tool not found. Install with: brew install ffmpeg" >&2
-    exit 1
-  fi
+LIST=0
+for arg in "$@"; do
+  case "$arg" in
+    --force) FORCE=1 ;;
+    --list) LIST=1 ;;
+    -h|--help) sed -n '2,20p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "unknown option: $arg" >&2; exit 1 ;;
+  esac
 done
 
-if [[ ! -f "$SRC" ]]; then
-  echo "error: source clip not found: $SRC" >&2
-  exit 1
-fi
+for tool in ffmpeg ffprobe; do
+  command -v "$tool" >/dev/null 2>&1 || {
+    echo "error: $tool not found. Install with: brew install ffmpeg" >&2
+    exit 1
+  }
+done
 
 mkdir -p "$OUT_DIR"
 
-if [[ -f "$OUT_MP4" && $FORCE -eq 0 ]]; then
-  echo "already prepared: ${OUT_MP4#"$ROOT"/} (use --force to rebuild)"
+# Lowercase, non-alphanumeric to hyphens. Derived names stay traceable to their source
+# without renaming the source itself.
+slugify() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g'
+}
+
+shopt -s nullglob nocaseglob
+videos=("$SRC_DIR"/*.mp4 "$SRC_DIR"/*.mov "$SRC_DIR"/*.m4v)
+shopt -u nocaseglob
+
+if [[ ${#videos[@]} -eq 0 ]]; then
+  echo "No videos found in images/ — nothing to prepare."
   exit 0
 fi
 
-echo "source:  $(basename "$SRC")"
-ffprobe -v error -select_streams v:0 \
-  -show_entries stream=width,height,r_frame_rate,duration \
-  -show_entries format=size -of default=noprint_wrappers=1:nokey=0 "$SRC" | sed 's/^/         /'
+printf '%-42s %10s %10s %9s  %s\n' "SOURCE" "SOURCE" "LOOP" "SAVING" "STATUS"
 
-# -an strips audio outright rather than relying on the muted attribute alone. The
-# supplied clip already has no audio stream despite its filename, but a motion tile
-# must be silent by construction, not by the caller remembering to mute it.
-#
-# crop=ih:ih centre-crops to a square using the short edge, so nothing is stretched
-# and no bars are introduced.
-echo "encoding ${EDGE}x${EDGE} muted loop..."
-ffmpeg -v error -y -i "$SRC" \
-  -an \
-  -vf "crop=ih:ih,scale=${EDGE}:${EDGE}:flags=lanczos" \
-  -c:v libx264 -profile:v high -pix_fmt yuv420p \
-  -crf 30 -preset slow \
-  -movflags +faststart \
-  "$OUT_MP4"
+total_src=0
+total_out=0
+prepared=0
 
-# The poster must be a frame from the clip itself, so a tile holding its poster is
-# indistinguishable from the same tile paused — otherwise the first frame visibly
-# jumps when playback starts.
-echo "extracting poster from first frame..."
-ffmpeg -v error -y -i "$SRC" \
-  -frames:v 1 \
-  -vf "crop=ih:ih,scale=${EDGE}:${EDGE}:flags=lanczos" \
-  -q:v 3 \
-  "$OUT_POSTER"
+for src in "${videos[@]}"; do
+  base="$(basename "${src%.*}")"
+  slug="$(slugify "$base")"
+  out_mp4="$OUT_DIR/${slug}-loop.mp4"
+  out_poster="$OUT_DIR/${slug}-poster.jpg"
 
-src_bytes=$(stat -f%z "$SRC")
-out_bytes=$(stat -f%z "$OUT_MP4")
-poster_bytes=$(stat -f%z "$OUT_POSTER")
+  src_bytes=$(stat -f%z "$src")
+  total_src=$((total_src + src_bytes))
 
-printf '\nresult:\n'
-printf '  %-46s %9s bytes\n' "$(basename "$SRC") (source)" "$(printf "%'d" "$src_bytes")"
-printf '  %-46s %9s bytes  (%.1f%% of source)\n' \
-  "$(basename "$OUT_MP4")" "$(printf "%'d" "$out_bytes")" \
-  "$(echo "scale=4; $out_bytes * 100 / $src_bytes" | bc)"
-printf '  %-46s %9s bytes\n' "$(basename "$OUT_POSTER")" "$(printf "%'d" "$poster_bytes")"
+  # Skip when the loop is already newer than its source, so a re-run is cheap.
+  if [[ $FORCE -eq 0 && -f "$out_mp4" && "$out_mp4" -nt "$src" ]]; then
+    out_bytes=$(stat -f%z "$out_mp4")
+    total_out=$((total_out + out_bytes))
+    printf '%-42s %10s %10s %8.1f%%  %s\n' "${base:0:42}" \
+      "$(printf "%'d" "$src_bytes")" "$(printf "%'d" "$out_bytes")" \
+      "$(echo "scale=4; 100 - ($out_bytes * 100 / $src_bytes)" | bc)" "already prepared"
+    continue
+  fi
 
-printf '\naudio streams in output: '
-if ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$OUT_MP4" | grep -q .; then
-  echo "PRESENT — this is a bug, motion tiles must be silent"
-  exit 1
-else
-  echo "none"
-fi
+  if [[ $LIST -eq 1 ]]; then
+    printf '%-42s %10s %10s %9s  %s\n' "${base:0:42}" "$(printf "%'d" "$src_bytes")" "-" "-" "would prepare"
+    continue
+  fi
 
-echo "dimensions: $(ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "$OUT_MP4")"
+  # Strip any baked-in letterbox or pillarbox FIRST, then square-crop what remains.
+  #
+  # One supplied clip is a portrait video pillarboxed into a 1920x1080 frame — only 32%
+  # of its width is picture. A plain centre square-crop kept the bars, so the tile showed
+  # a narrow strip of image floating in black.
+  #
+  # Two traps here, both hit on the way to this working:
+  #   1. cropdetect logs at INFO level, so running ffmpeg at -v error silently produced
+  #      nothing and the detection never fired.
+  #   2. A percentage-of-frame threshold is the wrong guard. Heavy pillarboxing is exactly
+  #      the case worth fixing, so a "keeps at least half the frame" rule rejected the one
+  #      clip that needed it — while still not proving the removed area was black.
+  #
+  # So the removed border is checked directly: a frame is sampled and the strips outside
+  # the detected rectangle must actually be near-black before the crop is trusted. That
+  # tests the assumption instead of guessing a ratio, and protects the dark-drapery clip
+  # where cropdetect could otherwise crop to almost nothing.
+  detected=$(ffmpeg -hide_banner -loglevel info -ss 0.5 -i "$src" \
+    -vf cropdetect=24:2:0 -frames:v 60 -f null - 2>&1 \
+    | grep -o 'crop=[0-9]*:[0-9]*:[0-9]*:[0-9]*' | tail -1 | cut -d= -f2)
+
+  pre_crop=""
+  if [[ -n "$detected" ]]; then
+    probe_frame="$OUT_DIR/.probe-${slug}.png"
+    ffmpeg -v error -y -ss 0.5 -i "$src" -frames:v 1 "$probe_frame" 2>/dev/null
+
+    verdict=$(php -r '
+      [$file, $rect] = [$argv[1], $argv[2]];
+      $im = @imagecreatefrompng($file);
+      if (!$im) { echo "skip:unreadable"; exit; }
+      [$cw, $ch, $cx, $cy] = array_map("intval", explode(":", $rect));
+      $w = imagesx($im); $h = imagesy($im);
+      // A crop that removes almost nothing is a no-op; reporting it as an action is noise.
+      if (($cw * $ch) / ($w * $h) > 0.99) { echo "skip:nothing-to-crop"; exit; }
+      if ($cw < $w * 0.12 || $ch < $h * 0.12) { echo "skip:implausibly-small"; exit; }
+
+      // Mean luma of everything OUTSIDE the detected rectangle.
+      $sum = 0; $n = 0;
+      $step = max(1, intdiv(min($w, $h), 64));
+      for ($y = 0; $y < $h; $y += $step) for ($x = 0; $x < $w; $x += $step) {
+        if ($x >= $cx && $x < $cx + $cw && $y >= $cy && $y < $cy + $ch) continue;
+        $c = imagecolorat($im, $x, $y);
+        $sum += 0.2126 * (($c >> 16) & 255) + 0.7152 * (($c >> 8) & 255) + 0.0722 * ($c & 255);
+        $n++;
+      }
+      if ($n === 0) { echo "skip:no-border"; exit; }
+      $mean = $sum / $n;
+      $pct = (1 - ($cw * $ch) / ($w * $h)) * 100;
+      echo $mean < 24 ? sprintf("use:%.0f", $pct) : sprintf("skip:border-not-black(%.0f)", $mean);
+    ' "$probe_frame" "$detected")
+    rm -f "$probe_frame"
+
+    case "$verdict" in
+      use:*)
+        pre_crop="crop=${detected},"
+        printf '  note: %s was %s%% black bars — stripped before cropping square\n' "$slug" "${verdict#use:}" >&2
+        ;;
+      skip:border-not-black*)
+        printf '  note: %s left uncropped, detected border is not black (%s)\n' "$slug" "$verdict" >&2
+        ;;
+    esac
+  fi
+
+  # -an strips audio outright rather than trusting the muted attribute. Two of the
+  # supplied clips carry an audio track; a motion tile must be silent by construction.
+  ffmpeg -v error -y -i "$src" \
+    -an \
+    -vf "${pre_crop}crop='min(iw,ih)':'min(iw,ih)',scale=${EDGE}:${EDGE}:flags=lanczos" \
+    -c:v libx264 -profile:v high -pix_fmt yuv420p \
+    -crf "$CRF" -preset slow \
+    -movflags +faststart \
+    "$out_mp4"
+
+  # The poster comes from ffmpeg's `thumbnail` filter, which picks the most
+  # representative frame from a batch, NOT from frame 1.
+  #
+  # Frame 1 turned out to be a poor choice on two of the supplied clips: one opens on a
+  # near-black fade-in and one on a letterboxed title card. Either makes a tile look
+  # broken or empty while the video loads, which is the exact thing a poster exists to
+  # prevent. Picking a representative frame costs nothing and fixes both.
+  ffmpeg -v error -y -i "$src" \
+    -vf "thumbnail=200,${pre_crop}crop='min(iw,ih)':'min(iw,ih)',scale=${EDGE}:${EDGE}:flags=lanczos" \
+    -frames:v 1 \
+    -q:v 3 \
+    "$out_poster"
+
+  # A poster that is almost entirely one flat tone is usually a fade or a title card that
+  # slipped through, so it is reported rather than left to be noticed on the page.
+  # Measured with GD: parsing ffmpeg's per-frame signalstats metadata reported 0 for every
+  # clip, including obviously bright ones, so it was silently useless.
+  poster_note=$(php -r '
+    $im = @imagecreatefromjpeg($argv[1]);
+    if (!$im) exit;
+    $w = imagesx($im); $h = imagesy($im); $step = max(1, intdiv(min($w,$h), 48));
+    $sum = 0; $n = 0; $min = 255; $max = 0;
+    for ($y = 0; $y < $h; $y += $step) for ($x = 0; $x < $w; $x += $step) {
+      $c = imagecolorat($im, $x, $y);
+      $l = 0.2126 * (($c >> 16) & 255) + 0.7152 * (($c >> 8) & 255) + 0.0722 * ($c & 255);
+      $sum += $l; $n++; $min = min($min, $l); $max = max($max, $l);
+    }
+    $mean = $sum / max(1, $n);
+    // Flat OR very dark both mean the frame carries no readable image.
+    if ($mean < 22)        printf("very dark (mean luma %.0f)", $mean);
+    elseif ($max - $min < 18) printf("almost flat (luma range %.0f)", $max - $min);
+  ' "$out_poster")
+  if [[ -n "$poster_note" ]]; then
+    printf '  note: %s poster is %s — check it reads as an image\n' "$slug" "$poster_note" >&2
+  fi
+
+  out_bytes=$(stat -f%z "$out_mp4")
+  total_out=$((total_out + out_bytes))
+  prepared=$((prepared + 1))
+
+  # A leftover audio track would defeat the whole point, so it is verified, not assumed.
+  if ffprobe -v error -select_streams a -show_entries stream=index -of csv=p=0 "$out_mp4" | grep -q .; then
+    echo "  ERROR: $slug still has an audio stream" >&2
+    exit 1
+  fi
+
+  printf '%-42s %10s %10s %8.1f%%  %s\n' "${base:0:42}" \
+    "$(printf "%'d" "$src_bytes")" "$(printf "%'d" "$out_bytes")" \
+    "$(echo "scale=4; 100 - ($out_bytes * 100 / $src_bytes)" | bc)" "prepared"
+done
+
+printf '\n%d prepared, %d total. %s bytes of source -> %s bytes of loops (%.1f%% saved).\n' \
+  "$prepared" "${#videos[@]}" \
+  "$(printf "%'d" "$total_src")" "$(printf "%'d" "$total_out")" \
+  "$(echo "scale=4; 100 - ($total_out * 100 / $total_src)" | bc)"
+printf 'All loops %dx%d, silent, faststart. Posters are the most representative frame, not frame 1.\n' "$EDGE" "$EDGE"

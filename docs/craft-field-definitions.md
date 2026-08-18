@@ -77,7 +77,7 @@ One block type would work, with fields shown/hidden by `type`. Image and motion 
 | `poster` | asset (single) | motion | **Required.** First frame, so a tile is never blank |
 | `alt` | text | image, motion | Required, descriptive. Treated as content |
 | `subject` | text | image, motion | Short product/subject name for accessible labels: "View {subject}", "Configure {subject} in Build". Falls back to `alt` — usually the linked product's title |
-| `contentType` | dropdown | image, motion | Drives the primary destination (table below). Not derivable from the filename |
+| `contentType` | dropdown | image, motion | Drives the primary destination (table below). Not derivable from the filename. `in-situ` \| `mid-zoom` \| `detail` \| `sketch` \| `swatch` \| `factory` \| `abstract` |
 | `playback` | dropdown | motion | `autoplay` \| `click` |
 | `tags` | tags | image, motion | Carried through; unused until Phase 2 tag skewing |
 | `focalPoint` | (on the asset) | image, motion | Set in Craft for any image whose subject is off-centre — otherwise the square crop cuts it out |
@@ -119,6 +119,7 @@ Every styling value is a **named token**. Free-form colour, size and spacing val
 | `in-situ`, `mid-zoom`, `detail`, `sketch` | The product page for the thing shown |
 | `swatch` | The swatches page |
 | `factory` | The About page |
+| `abstract` | Texture and atmosphere, not a product. Mapped to the About page as an intent, but currently shipped `live: false` — see the README |
 
 ### The `live` flag
 
