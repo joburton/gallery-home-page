@@ -23,12 +23,11 @@
 export function initMotion(root, maxConcurrent) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // Clones are decoration: they carry no data-playback and no <source>, so they are
-  // never candidates. Selecting on [data-playback] rather than on 'video' is what keeps
-  // padding repeats from competing for slots.
-  const videos = () => [...root.querySelectorAll('video[data-playback]')].filter(
-    (v) => !v.closest('[data-tile-repeat]'),
-  );
+  // Padding repeats keep their <source> and data-playback (see gallery-canvas.js), so a
+  // repeat of a motion tile is a real candidate once onscreen — not just the canonical
+  // instance. They still compete for the same maxConcurrentMotion pool below, ranked by
+  // visibility like everything else.
+  const videos = () => [...root.querySelectorAll('video[data-playback]')];
 
   /** @type {Map<HTMLVideoElement, number>} element -> intersection ratio */
   const visible = new Map();
@@ -107,7 +106,7 @@ export function initMotion(root, maxConcurrent) {
   // — but it still counts against the cap and still pauses when it leaves the viewport.
   const onClick = (event) => {
     const video = event.target.closest?.('video[data-playback="click"]');
-    if (!video || video.closest('[data-tile-repeat]')) return;
+    if (!video) return;
     if (video.paused) play(video); else pause(video);
   };
 

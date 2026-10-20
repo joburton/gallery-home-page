@@ -549,7 +549,7 @@ Explicit scope boundaries.
 - **The rest of the SABIN site** — no navigation, footer, page chrome, or page-level CSS. Phase 0 site cleanup is a separate workstream.
 - **Craft itself** — not wired up in this phase. The fixture is the data source; the shim is what makes that invisible to the template.
 - **Tile order as a guarantee** — dense packing may reorder tiles. Only the welcome tile is pinned.
-- **Phase 2 scope** — no shuffle scheduler, no tag filtering or tag UI, no additional imagery beyond the ~30.
+- **Phase 2 scope** — no *automatic, cadence-driven* shuffle scheduler, no visitor-facing tag filtering or tag UI. Manual, admin-triggered tag-skew weighting (`row.tagSkew`, `bin/shuffle-tiles --boost`) was pulled into Phase 1 on 20 Aug 2026 — see `CLAUDE.md` Principle #5.
 - **Phase 3 scope** — no schema.org/JSON-LD markup, no Catalog/Downloads migration. Nothing here requires re-rendering tiles to add structured data later.
 - **The footer** — a separate Craft row. The canvas simply ends; no footer behaviour of any kind is built.
 

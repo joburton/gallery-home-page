@@ -109,9 +109,12 @@ for src in "${videos[@]}"; do
   # the detected rectangle must actually be near-black before the crop is trusted. That
   # tests the assumption instead of guessing a ratio, and protects the dark-drapery clip
   # where cropdetect could otherwise crop to almost nothing.
+  # grep finds nothing on the (normal) case of a clip with no letterboxing at all, which
+  # is not a failure — `|| true` stops that from tripping pipefail and silently aborting
+  # every remaining file in the batch behind it.
   detected=$(ffmpeg -hide_banner -loglevel info -ss 0.5 -i "$src" \
     -vf cropdetect=24:2:0 -frames:v 60 -f null - 2>&1 \
-    | grep -o 'crop=[0-9]*:[0-9]*:[0-9]*:[0-9]*' | tail -1 | cut -d= -f2)
+    | { grep -o 'crop=[0-9]*:[0-9]*:[0-9]*:[0-9]*' || true; } | tail -1 | cut -d= -f2)
 
   pre_crop=""
   if [[ -n "$detected" ]]; then

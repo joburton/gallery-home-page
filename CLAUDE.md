@@ -64,10 +64,11 @@ Don't write code for functionality that doesn't exist yet. Add it when the featu
 
 **What this prohibits:**
 - Loops that iterate but do nothing, method stubs, parameters accepted but ignored, `TODO:` placeholder code.
-- Phase 2/3 work: shuffle scheduling, tag filtering or tag UI, schema.org markup, live Craft wiring.
+- Phase 2/3 work: *automatic, cadence-driven* shuffle scheduling, visitor-facing tag filtering or tag UI, schema.org markup, live Craft wiring.
 
 **What this permits:**
-- Carrying `tags` through the data layer unused, because the fixture shape is itself the Phase 3 contract.
+- Manual, admin-triggered tag-skew weighting (`row.tagSkew`, `bin/shuffle-tiles --boost`) — pulled into Phase 1 on 20 Aug 2026. This is *not* the Phase 2 item: there is still no scheduler, no cadence, and no visitor-facing filtering. An admin flips `tagSkew.enabled` and runs the script by hand; nothing runs on its own. The automatic cadence-driven version remains Phase 2.
+- Carrying `class` through the data layer with no code-level enum and no behaviour tied to it, because it exists purely for Craft-side content organisation.
 - Generality the spec explicitly mandates: arbitrary `cols x rows` spans, a swappable Build icon, changeable tile type.
 
 ### 6. The Template Shape Is The Contract
@@ -146,7 +147,7 @@ Always true in this codebase:
 - Build a second, column-based masonry engine alongside the auto-fill grid
 - Build a bespoke image pipeline instead of ImagerX, or hardcoded colour classes instead of the colour macro
 - Rename the source media in `images/` — the descriptive names carry provenance, so assign `contentType` per tile in the fixture instead
-- Build tag filtering, tag UI, footer behaviour, navigation, page chrome, drag/reorder, or shuffle *scheduling* — the periodic, tag-skewed, cadence-driven shuffle is Phase 2. Reordering the fixture's tiles as a one-off data change is not that and is fine: see `bin/shuffle-tiles`, which permutes only `dynamic` tiles and leaves `static` ones in place, per the brief's own definition of the designation field
+- Build visitor-facing tag filtering, tag UI, footer behaviour, navigation, page chrome, drag/reorder, or *automatic, cadence-driven* shuffle scheduling — that remains Phase 2. Manual, admin-triggered tag-skew weighting is now in scope (see Principle #5) and lives in two places: `row.tagSkew`, read by `gallery-canvas.js` to weight which tiles the client-side canvas padding repeats more often; and `bin/shuffle-tiles --boost <tag>`, which biases the one-off reorder of the canonical, server-rendered tile order. Neither adds a scheduler, a cadence, or anything that hides a tile from crawlers — an admin turns skew on and off by hand. Plain reordering with no `--boost` is unchanged: it permutes only `dynamic` tiles and leaves `static` ones in place, per the brief's own definition of the designation field
 - Shuffle at render time — a different document order per request defeats the crawlability the row exists for
 - Add a wide or panoramic tile size to accommodate wide source images — crop them square; swap any image that doesn't read well cropped
 - Install a Node/PostCSS toolchain or npm-install Alpine (Principle #9)

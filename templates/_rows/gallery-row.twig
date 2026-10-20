@@ -43,6 +43,12 @@
  data-inertia-speed="{{ row.scrollInertia.speed }}"
  data-inertia-feel="{{ row.scrollInertia.feel }}"
  data-max-concurrent-motion="{{ row.maxConcurrentMotion }}"
+ {#- Content skew biases which tiles the client-side canvas padding repeats more often
+     while a tag is topical (e.g. an award-winning product), without touching the
+     server-rendered document order or content — see gallery-canvas.js. #}
+ data-tag-skew-enabled="{{ row.tagSkew.enabled ? 'true' : 'false' }}"
+ data-tag-skew-tags="{{ row.tagSkew.tags|join(',') }}"
+ data-tag-skew-weight="{{ row.tagSkew.weight }}"
  style="--gallery-gap: {{ row.tileGap }}px; --gallery-card-target: {{ row.cardTarget }}; --gallery-min-depth: {{ row.minCanvasDepth }};"
  aria-label="Sabin gallery"
 >
@@ -57,6 +63,9 @@
     data-tile-size="{{ tile.size }}"
     data-designation="{{ tile.designation }}"
     {%- if tile.type == 'text' %} data-background="{{ tile.text.background }}"{% endif %}
+    {#- Tags are otherwise unused server-side; the canvas padding pool reads this one
+        client-side attribute to weight repeats during a content skew. #}
+    {%- if tile.tags is defined %} data-tags="{{ tile.tags|join(',') }}"{% endif %}
     {#- The welcome tile is pinned to the first cell explicitly rather than left to
         the packing algorithm, which is otherwise free to move it. #}
     {%- if loop.first %} data-pinned="first"{% endif %}

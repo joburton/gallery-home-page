@@ -160,6 +160,17 @@ expect_rejected('missing media file on disk', function (array $row): array {
     return $row;
 });
 
+expect_rejected('over the 1000-tile ceiling', function (array $row): array {
+    $template = $row['tiles'][tile_of_type($row['tiles'], 'image')];
+    $extra = [];
+    for ($i = 0; $i < 1001; $i++) {
+        $extra[] = ['id' => "overflow-{$i}"] + $template;
+    }
+    $row['tiles'] = [$row['tiles'][0], ...$extra];
+
+    return $row;
+});
+
 echo "\n=== 4. Craft idioms resolve through the shim ===\n\n";
 
 $loader = new FixtureLoader($root);

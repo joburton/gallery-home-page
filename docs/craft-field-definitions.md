@@ -55,11 +55,16 @@ The row is authored against Craft's own API, so these must resolve as they norma
 | `scrollInertia.enabled` | lightswitch | Yes | `true` | |
 | `scrollInertia.speed` | dropdown | Yes | `medium` | `slow` \| `medium` \| `fast` |
 | `scrollInertia.feel` | dropdown | Yes | `smooth` | `smooth` \| `glide` \| `overshoot` |
-| `tiles` | matrix / nested entries | Yes | — | The tiles, in order |
+| `tagSkew.enabled` | lightswitch | Yes | `false` | Turns the current content skew on. Admin-triggered only — there is no automatic cadence |
+| `tagSkew.tags` | tags | Yes | `[]` | While enabled, tiles carrying any of these tags are repeated more often by the client-side canvas padding (never added to or removed from the server-rendered tile set) |
+| `tagSkew.weight` | number | Yes | `4` | How many times as often a matching tile is repeated versus a non-matching one, `>= 1` |
+| `tiles` | matrix / nested entries | Yes | — | The tiles, in order. Hard ceiling of 1000 entries — the fixture loader rejects anything over that rather than silently truncating |
 
 **No code default backs any of these.** A missing field is a validation error rather than a silent fallback, because a code-side default would put a gallery setting outside the row. Set defaults at the field level in Craft.
 
 **None of these are visitor-facing**, now or later. There is no control anywhere in the row that lets a visitor change a layout mode, a designation, or an inertia setting.
+
+**`tagSkew` is a manual weighting tool, not a scheduler.** There is no cadence, no automatic expiry, and no runtime tag filtering that hides other tiles — turning it on biases which tiles the *client-side, decorative* canvas padding repeats more often (e.g. Taper reads as more prominent while scrolling during a promotion), while the server-rendered document itself is unaffected and every other tile stays fully present and crawlable. An admin turns it off by hand when the promotion ends. Pair it with `bin/shuffle-tiles --boost <tag>` to also bias the *canonical* tile order itself (see that script's usage).
 
 ---
 
@@ -77,9 +82,10 @@ One block type would work, with fields shown/hidden by `type`. Image and motion 
 | `poster` | asset (single) | motion | **Required.** First frame, so a tile is never blank |
 | `alt` | text | image, motion | Required, descriptive. Treated as content |
 | `subject` | text | image, motion | Short product/subject name for accessible labels: "View {subject}", "Configure {subject} in Build". Falls back to `alt` — usually the linked product's title |
-| `contentType` | dropdown | image, motion | Drives the primary destination (table below). Not derivable from the filename. `in-situ` \| `mid-zoom` \| `detail` \| `sketch` \| `swatch` \| `factory` \| `abstract` |
+| `contentType` | dropdown | image, motion | Drives the primary destination (table below). Not derivable from the filename. `in-situ` \| `mid-zoom` \| `detail` \| `sketch` \| `swatch` \| `factory` \| `abstract`. Fixed vocabulary — do not repurpose for open-ended classification, that's `class` below |
+| `class` | categories (single, admin-managed group) | image, motion | **Optional, no code-level enum.** Free classification for managing the library in Craft — e.g. case study, swatch, product detail, in-situ rendering, mid-zoom rendering, process, team, company, abstract — plus whatever else gets added later. Unlike `contentType`, adding a new value is a Craft content change, never a code change, and it drives nothing (no routing, no rendering behaviour) — it exists purely so images stay organised as the library grows. Leaving it unset (default/"unclassified") is valid |
 | `playback` | dropdown | motion | `autoplay` \| `click` |
-| `tags` | tags | image, motion | Carried through; unused until Phase 2 tag skewing |
+| `tags` | tags | image, motion | Free-form labels an admin adds per image (e.g. `taper`, `blue`, `california`). Read by `row.tagSkew` to weight canvas padding repeats, and by `bin/shuffle-tiles --boost` to bias the canonical order — see the Row fields table |
 | `focalPoint` | (on the asset) | image, motion | Set in Craft for any image whose subject is off-centre — otherwise the square crop cuts it out |
 | `destination` | link + lightswitch | image, motion | `{ type, url, live }` — the whole-tile link |
 | `buildLink` | link + lightswitch | image, motion | `{ url, live }` or null — the corner icon's link |

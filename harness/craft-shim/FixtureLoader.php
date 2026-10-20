@@ -64,6 +64,15 @@ final class FixtureLoader
             throw new FixtureValidationException($this->violations);
         }
 
+        if (count($tiles) > Tokens::MAX_TILES) {
+            $this->violations[] = sprintf(
+                'row.tiles has %d entries, over the %d-tile ceiling',
+                count($tiles),
+                Tokens::MAX_TILES,
+            );
+            throw new FixtureValidationException($this->violations);
+        }
+
         $this->validateTiles($tiles);
 
         if ($this->violations !== []) {
@@ -111,6 +120,24 @@ final class FixtureLoader
         }
         $this->requireEnum($inertia, 'speed', Tokens::INERTIA_SPEEDS, 'row.scrollInertia');
         $this->requireEnum($inertia, 'feel', Tokens::INERTIA_FEELS, 'row.scrollInertia');
+
+        $tagSkew = $row['tagSkew'] ?? null;
+        if (!is_array($tagSkew)) {
+            $this->violations[] = 'row.tagSkew is required';
+
+            return;
+        }
+        if (!isset($tagSkew['enabled']) || !is_bool($tagSkew['enabled'])) {
+            $this->violations[] = 'row.tagSkew.enabled must be a boolean';
+        }
+        if (!isset($tagSkew['tags']) || !is_array($tagSkew['tags'])) {
+            $this->violations[] = 'row.tagSkew.tags must be an array';
+        } elseif (array_filter($tagSkew['tags'], static fn ($t) => !is_string($t) || $t === '') !== []) {
+            $this->violations[] = 'row.tagSkew.tags must contain only non-empty strings';
+        }
+        if (!isset($tagSkew['weight']) || !is_numeric($tagSkew['weight']) || $tagSkew['weight'] < 1) {
+            $this->violations[] = 'row.tagSkew.weight must be a number >= 1';
+        }
     }
 
     // --------------------------------------------------------------- tile rules

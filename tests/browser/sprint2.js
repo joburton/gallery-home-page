@@ -280,7 +280,7 @@ const check = (label, ok, detail = '') => {
     const vids = [...document.querySelectorAll('video[data-playback]')];
     return {
       count: vids.length,
-      inClones: [...document.querySelectorAll('[data-tile-repeat] video')].length,
+      inClones: [...document.querySelectorAll('[data-tile-repeat] video[data-playback]')].length,
       posters: vids.filter(v => v.getAttribute('poster')).length,
       muted: vids.filter(v => v.muted).length,
       cap: +document.querySelector('[data-gallery-row]').dataset.maxConcurrentMotion,
@@ -288,8 +288,8 @@ const check = (label, ok, detail = '') => {
   })()`);
   check('every motion tile is muted and poster-bearing',
     motion.posters === motion.count && motion.muted === motion.count, `${motion.count} tiles`);
-  check('clone videos carry no playback role', motion.inClones >= 0,
-    `${motion.inClones} clone videos, none eligible`);
+  check('padding repeats of motion tiles are real, playable candidates', motion.inClones > 0,
+    `${motion.inClones} clone videos eligible to play`);
 
   // Onscreen -> plays. Scrolled away -> pauses.
   await s.ev(`(() => { const v=document.querySelector('video[data-playback]');
@@ -298,6 +298,18 @@ const check = (label, ok, detail = '') => {
   const onscreen = await s.ev(`(() => { const v=document.querySelector('video[data-playback]');
     return { playing: !v.paused, marked: v.dataset.motionPlaying === 'true', count: window.__gallery[0].motion.playing() }; })()`);
   check('motion plays while onscreen', onscreen.playing === true, `playing=${onscreen.count}`);
+
+  // The bug this guards: a padding repeat of a motion tile must actually loop too, not
+  // just sit on its poster — a visitor scrolling past the second copy of a video should
+  // see it move, same as the first.
+  await s.ev(`(() => { const v=document.querySelector('[data-tile-repeat] video[data-playback]');
+    v.closest('[data-tile-repeat]').scrollIntoView({block:'center'}); })()`);
+  await new Promise((r) => setTimeout(r, 1200));
+  const cloneOnscreen = await s.ev(`(() => { const v=document.querySelector('[data-tile-repeat] video[data-playback]');
+    return { playing: !v.paused, hasSource: v.querySelector('source') !== null }; })()`);
+  check('padding repeat of a motion tile plays while onscreen, not just the canonical tile',
+    cloneOnscreen.playing === true && cloneOnscreen.hasSource === true,
+    `playing=${cloneOnscreen.playing} hasSource=${cloneOnscreen.hasSource}`);
 
   // Scroll the chosen tile well ABOVE the viewport rather than scrolling to the top of
   // the page. With several motion tiles spread through the canvas, the top of the page is

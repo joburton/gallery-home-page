@@ -13,6 +13,11 @@
             "speed": "medium",
             "feel": "smooth"
         },
+        "tagSkew": {
+            "enabled": false,
+            "tags": [],
+            "weight": 4
+        },
         "tiles": [
             {
                 "id": "tile-000",
@@ -1078,6 +1083,181 @@
                     "url": "https://www.gallery.sabin.build/4/",
                     "live": true
                 },
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-050",
+                "type": "motion",
+                "media": "/dist/media/12515639-3840-2160-60fps-loop.mp4",
+                "poster": "/dist/media/12515639-3840-2160-60fps-poster.jpg",
+                "alt": "Sweeping sand dunes ripple across a desert landscape under a pale blue sky",
+                "subject": "desert dunes",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "desert",
+                    "dunes",
+                    "texture"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-051",
+                "type": "motion",
+                "media": "/dist/media/12559988-1080-1920-30fps-loop.mp4",
+                "poster": "/dist/media/12559988-1080-1920-30fps-poster.jpg",
+                "alt": "Concentric rings of warm brown paint spiral slowly outward",
+                "subject": "spiraling paint",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "texture",
+                    "brown",
+                    "paint"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-052",
+                "type": "motion",
+                "media": "/dist/media/12854263-3840-2160-30fps-loop.mp4",
+                "poster": "/dist/media/12854263-3840-2160-30fps-poster.jpg",
+                "alt": "A yellow dragonfly perched on the tip of a bare twig, set against a soft green blur",
+                "subject": "dragonfly",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "nature",
+                    "insect",
+                    "macro"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-053",
+                "type": "motion",
+                "media": "/dist/media/13012831-1080-1920-30fps-loop.mp4",
+                "poster": "/dist/media/13012831-1080-1920-30fps-poster.jpg",
+                "alt": "Glowing blue bioluminescent tendrils curl against total darkness",
+                "subject": "bioluminescence",
+                "size": "2x2",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "blue",
+                    "glow",
+                    "texture"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-054",
+                "type": "motion",
+                "media": "/dist/media/1494293-hd-1920-1080-24fps-loop.mp4",
+                "poster": "/dist/media/1494293-hd-1920-1080-24fps-poster.jpg",
+                "alt": "Pale catkins hang from a branch among dark green leaves in low light",
+                "subject": "catkins",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "nature",
+                    "botanical",
+                    "texture"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-055",
+                "type": "motion",
+                "media": "/dist/media/3051359-uhd-3840-2160-25fps-loop.mp4",
+                "poster": "/dist/media/3051359-uhd-3840-2160-25fps-poster.jpg",
+                "alt": "Streaks of golden yellow liquid swirl and drip through dark water",
+                "subject": "yellow swirls",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "yellow",
+                    "texture",
+                    "liquid"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
+                "designation": "dynamic"
+            },
+            {
+                "id": "tile-056",
+                "type": "motion",
+                "media": "/dist/media/7467279-hd-1920-1080-30fps-loop.mp4",
+                "poster": "/dist/media/7467279-hd-1920-1080-30fps-poster.jpg",
+                "alt": "Pink and white paint swirl together in soft marbled waves",
+                "subject": "pink swirl",
+                "size": "1x1",
+                "contentType": "abstract",
+                "class": "abstract",
+                "playback": "autoplay",
+                "tags": [
+                    "abstract",
+                    "pink",
+                    "texture",
+                    "paint"
+                ],
+                "destination": {
+                    "type": "about",
+                    "url": "/about",
+                    "live": false
+                },
+                "buildLink": null,
                 "designation": "dynamic"
             }
         ]

@@ -22,15 +22,27 @@ declare(strict_types=1);
  * the first cell and the NeoCon announcement stays where it was placed, with no special
  * cases in this script.
  *
+ * --boost biases this same reorder toward tiles carrying a given tag, so a one-off run
+ * can make the canonical order read as e.g. "Taper-heavy" after a launch or an award —
+ * this is content skew, deliberately pulled into Phase 1 as manual, admin-triggered
+ * weighting. It does NOT add a cadence or scheduler: someone still runs this by hand
+ * when it's time to skew, and again with no --boost to return to a neutral order. The
+ * separate row.tagSkew setting handles the higher-volume half of "feels heavy" by
+ * weighting which tiles the client-side canvas padding repeats more often, without
+ * needing a re-run of this script — see gallery-canvas.js.
+ *
  * Usage:
- *   bin/shuffle-tiles                 shuffle with a random seed (prints it)
- *   bin/shuffle-tiles --seed 12345    reproduce a specific shuffle
- *   bin/shuffle-tiles --dry-run       show the result, write nothing
+ *   bin/shuffle-tiles                       shuffle with a random seed (prints it)
+ *   bin/shuffle-tiles --seed 12345          reproduce a specific shuffle
+ *   bin/shuffle-tiles --boost taper         bias dynamic taper-tagged tiles earlier
+ *   bin/shuffle-tiles --boost taper,blue    bias tiles matching any of these tags
+ *   bin/shuffle-tiles --dry-run             show the result, write nothing
  */
 
 $args = array_slice($argv, 1);
 $seed = null;
 $dryRun = false;
+$boostTags = [];
 
 for ($i = 0; $i < count($args); $i++) {
     switch ($args[$i]) {
@@ -39,6 +51,12 @@ for ($i = 0; $i < count($args); $i++) {
             break;
         case '--dry-run':
             $dryRun = true;
+            break;
+        case '--boost':
+            $boostTags = array_values(array_filter(array_map(
+                'trim',
+                explode(',', $args[++$i] ?? ''),
+            )));
             break;
         case '-h':
         case '--help':
@@ -106,6 +124,30 @@ $penalty = static function (array $seq): int {
 };
 
 /**
+ * How strongly a sequence favours --boost tiles toward the front.
+ *
+ * Always 0 when no --boost tags were given, so an unboosted run scores identically to
+ * before this existed. Earlier positions score higher, which is what pulls boosted
+ * tiles forward in the hill-climb below while the monotony penalty still keeps them
+ * from clustering together.
+ */
+$boostBonus = static function (array $seq) use ($boostTags): int {
+    if ($boostTags === []) {
+        return 0;
+    }
+    $bonus = 0;
+    $n = count($seq);
+    foreach ($seq as $i => $tile) {
+        $tags = $tile['tags'] ?? [];
+        if (is_array($tags) && array_intersect($tags, $boostTags) !== []) {
+            $bonus += $n - $i;
+        }
+    }
+
+    return $bonus;
+};
+
+/**
  * Puts the fixed tiles back at their own indices and fills the gaps in order.
  *
  * Scoring has to run on this, not on the movable list: the static tiles are both large,
@@ -129,12 +171,17 @@ for ($i = count($movable) - 1; $i > 0; $i--) {
 }
 
 $before = $penalty($tiles);
+$boostBefore = $boostBonus($tiles);
 
-// Bounded hill-climb: try swaps, keep the ones that reduce monotony. Deterministic for a
-// given seed, and it stops as soon as it stops helping.
-$best = $penalty($assemble($movable));
+// Bounded hill-climb: try swaps, keep the ones that reduce monotony and (when boosting)
+// increase how far forward the boosted tiles sit. Deterministic for a given seed.
+// Unboosted runs still stop as soon as monotony hits zero, exactly as before --boost
+// existed; a boosted run keeps climbing for the full budget since bonus - penalty
+// rarely bottoms out early.
+$score = static fn (array $seq): int => $penalty($seq) - $boostBonus($seq);
+$best = $score($assemble($movable));
 $count = count($movable);
-for ($pass = 0; $pass < 4000 && $best > 0; $pass++) {
+for ($pass = 0; $pass < 4000 && ($boostTags !== [] || $best > 0); $pass++) {
     $a = mt_rand(0, $count - 1);
     $b = mt_rand(0, $count - 1);
     if ($a === $b) {
@@ -142,10 +189,10 @@ for ($pass = 0; $pass < 4000 && $best > 0; $pass++) {
     }
     $trial = $movable;
     [$trial[$a], $trial[$b]] = [$trial[$b], $trial[$a]];
-    $score = $penalty($assemble($trial));
-    if ($score < $best) {
+    $trialScore = $score($assemble($trial));
+    if ($trialScore < $best) {
         $movable = $trial;
-        $best = $score;
+        $best = $trialScore;
     }
 }
 
@@ -168,9 +215,34 @@ foreach ($fixed as $i => $tile) {
     printf("    index %-2d stays: %s — %s\n", $i, $tile['id'], substr($label, 0, 46));
 }
 
-printf("\n  monotony score %d -> %d  (adjacent duplicates, clustered large tiles, runs of one type)\n", $before, $best);
+printf(
+    "\n  monotony score %d -> %d  (adjacent duplicates, clustered large tiles, runs of one type)\n",
+    $before,
+    $penalty($result),
+);
 printf("  before: %s ...\n", $summarise($tiles));
 printf("  after:  %s ...\n", $summarise($result));
+
+if ($boostTags !== []) {
+    printf(
+        "\n  boost [%s]: forward-position score %d -> %d (higher = boosted tiles sit earlier)\n",
+        implode(', ', $boostTags),
+        $boostBefore,
+        $boostBonus($result),
+    );
+    $positions = [];
+    foreach ($result as $i => $t) {
+        $tags = $t['tags'] ?? [];
+        if (is_array($tags) && array_intersect($tags, $boostTags) !== []) {
+            $positions[] = $i;
+        }
+    }
+    printf(
+        "  %d matching tile(s) now at: %s\n",
+        count($positions),
+        $positions !== [] ? implode(', ', $positions) : '(none found — check the tag spelling)',
+    );
+}
 
 $spread = [];
 foreach ($result as $i => $t) {

@@ -38,6 +38,28 @@ export function initCanvas(root) {
   );
   if (sources.length === 0) return { destroy() {} };
 
+  // Tag skew — while active, a tile carrying a skewed tag is repeated more often in the
+  // padding pool, so the gallery reads as e.g. "Taper-heavy" during a promotion without
+  // touching the server-rendered document's order or content (row.tagSkew in Twig).
+  const skewTags = (root.dataset.tagSkewTags || '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean);
+  const skewEnabled = root.dataset.tagSkewEnabled === 'true' && skewTags.length > 0;
+  const skewWeight = Math.max(1, parseFloat(root.dataset.tagSkewWeight) || 1);
+
+  /** Expands a source pool so skewed-tag tiles appear row.tagSkew.weight times as often. */
+  const weighted = (pool) => {
+    if (!skewEnabled) return pool;
+    const out = [];
+    for (const el of pool) {
+      const tags = (el.dataset.tags || '').split(',').filter(Boolean);
+      const repeats = tags.some((t) => skewTags.includes(t)) ? skewWeight : 1;
+      for (let i = 0; i < repeats; i++) out.push(el);
+    }
+    return out;
+  };
+
   /** Hard ceiling on clones, so a large minCanvasDepth cannot produce a runaway DOM. */
   const MAX_CLONES = 600;
 
@@ -80,13 +102,10 @@ export function initCanvas(root) {
       img.alt = '';
     }
 
-    for (const video of el.querySelectorAll('video')) {
-      // Clones never play. Motion playback is capped, and spending slots on
-      // decoration would starve the real tiles.
-      video.removeAttribute('data-playback');
-      video.querySelectorAll('source').forEach((s) => s.remove());
-      video.removeAttribute('autoplay');
-    }
+    // Clones keep their <source> and data-playback: a repeat is still real motion once
+    // it is onscreen, capped by the same row.maxConcurrentMotion pool as every other
+    // tile (see gallery-motion.js). preload="none" on the <video> already prevents any
+    // fetch until playback is actually granted, so this costs nothing until it plays.
 
     return el;
   };
@@ -141,9 +160,10 @@ export function initCanvas(root) {
    *   one-column gap, so the row-completion pass needs single cells.
    */
   const appendClone = (index, onlySingle = false) => {
-    const pool = onlySingle
+    const base = onlySingle
       ? sources.filter((el) => el.dataset.tileSize === '1x1')
       : sources;
+    const pool = weighted(base);
     if (pool.length === 0) return null;
 
     const clone = makeInert(pool[index % pool.length].cloneNode(true));

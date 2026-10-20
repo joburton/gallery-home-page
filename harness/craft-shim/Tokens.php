@@ -18,6 +18,9 @@ namespace Sabin\Harness;
  */
 final class Tokens
 {
+    /** Hard ceiling on total tiles in a row, so an unbounded Matrix field cannot sink the page. */
+    public const MAX_TILES = 1000;
+
     /** Row-level enums. */
     public const THEMES = ['light', 'dark'];
     public const LAYOUT_MODES = ['swiss', 'masonry'];
